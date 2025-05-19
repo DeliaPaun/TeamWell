@@ -10,7 +10,7 @@ const activitiesRouter = require('./routes/activities');
 const usersRouter = require('./routes/users');
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ origin: 'https://teamwell-platform.vercel.app' }));
 app.use(express.json());
 
 app.use('/api', authRoutes);
