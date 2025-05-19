@@ -1,6 +1,5 @@
-// src/App.js
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';   // nou
+import LandingPage from './pages/LandingPage';   
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
@@ -19,8 +18,8 @@ function App() {
         <Route path="/" element={<LandingPage />} />
 
         {/* 2) Rute publice */}
-        <Route path="/api/login" element={<Login />} />
-        <Route path="/api/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         {/* 3) Rute protejate */}
         <Route
