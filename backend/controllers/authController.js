@@ -1,4 +1,3 @@
-// src/controllers/authController.js
 const bcrypt = require('bcrypt');
 const jwt    = require('jsonwebtoken');
 const pool   = require('../db');
@@ -14,10 +13,9 @@ exports.register = async (req, res) => {
     first_name,
     last_name,
     role,
-    teamName      // <-- adăugat
+    teamName      
   } = req.body;
 
-  // Validări de bază
   if (password.length !== 10) {
     return res
       .status(400)
