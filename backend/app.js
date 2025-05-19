@@ -11,7 +11,7 @@ const usersRouter = require('./routes/users');
 
 const app = express();
 
-app.use(cors({ origin: 'https://teamwell.vercel.app/api', credentials: true }));
+app.use(cors({ origin: 'https://teamwell.vercel.app', credentials: true }));
 app.use(express.json());
 
 app.get('/', (req, res) => res.json({ status: 'ok' }));

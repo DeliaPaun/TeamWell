@@ -19,8 +19,8 @@ function App() {
         <Route path="/" element={<LandingPage />} />
 
         {/* 2) Rute publice */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/api/login" element={<Login />} />
+        <Route path="/api/register" element={<Register />} />
 
         {/* 3) Rute protejate */}
         <Route
