@@ -10,7 +10,23 @@ const activitiesRouter = require('./routes/activities');
 const usersRouter = require('./routes/users');
 
 const app = express();
-app.use(cors({ origin: 'https://teamwell-platform.vercel.app' }));
+//app.use(cors({ origin: 'http://localhost:3000' }));
+//app.use(cors({ origin: 'https://teamwell-platform.vercel.app' }));
+const allowedOrigins = [
+  'http://localhost:3000',
+  process.env.CORS_ORIGIN    
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Dacă nu există origin (ex. curl, Postman) sau e în lista allowed, ok:
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS policy: originea ${origin} nepermisă`));
+    }
+  }
+}));
 app.use(express.json());
 
 app.use('/api', authRoutes);
