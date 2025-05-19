@@ -17,7 +17,7 @@ const allowedOrigins = [
   process.env.CORS_ORIGIN    
 ].filter(Boolean);
 
-app.use(cors({
+/*app.use(cors({
   origin: (origin, callback) => {
     // Dacă nu există origin (ex. curl, Postman) sau e în lista allowed, ok:
     if (!origin || allowedOrigins.includes(origin)) {
@@ -26,7 +26,8 @@ app.use(cors({
       callback(new Error(`CORS policy: originea ${origin} nepermisă`));
     }
   }
-}));
+}));*/
+app.use(cors());
 app.use(express.json());
 
 app.use('/api', authRoutes);
