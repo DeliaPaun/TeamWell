@@ -16,6 +16,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   process.env.CORS_ORIGIN    
 ].filter(Boolean);
+// chiar după `const app = express();`
+app.get('/', (req, res) => res.json({ status: 'ok' }));
 
 /*app.use(cors({
   origin: (origin, callback) => {
