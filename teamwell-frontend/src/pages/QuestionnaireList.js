@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import API from '../api';
 
-const METABASE_DASHBOARD_URL =
+const BI_DASHBOARD_URL =
   process.env.REACT_APP_METABASE_DASHBOARD_URL ||
   'http://localhost:3002';
 
@@ -40,6 +40,8 @@ export default function QuestionnaireList() {
   const { first_name, last_name, role } = user;
   const fullName                        = `${first_name || ''} ${last_name || ''}`.trim();
 
+  const isManagerOrAdmin = role === 'manager' || role === 'admin';
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -47,7 +49,7 @@ export default function QuestionnaireList() {
       padding: '2rem'
     }}>
       <div style={{
-        maxWidth: '800px',
+        maxWidth: '1200px',
         margin: '0 auto',
         background: 'white',
         borderRadius: '8px',
@@ -109,7 +111,7 @@ export default function QuestionnaireList() {
         </p>
 
         {/* Employee view */}
-        {role === 'employee' && (
+        {!isManagerOrAdmin && (
           <>
             <button onClick={() => navigate('/activities')} style={{
               background: '#6a1b9a',
@@ -147,49 +149,56 @@ export default function QuestionnaireList() {
         )}
 
         {/* Manager/Admin view */}
-        {(role === 'manager' || role === 'admin') && (
+        {isManagerOrAdmin && (
           <>
-            {/* Link către Metabase */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <a
-                href={METABASE_DASHBOARD_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+            <h3 style={{ color: '#6a1b9a', marginTop: 0 }}>
+              Employees' Questionnaire Results
+            </h3>
+
+            {/* Embedded BI dashboard */}
+            <div style={{
+              width: '100%',
+              height: '600px',
+              borderRadius: '8px',
+              overflow: 'hidden',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+            }}>
+              <iframe
+                title="BI Dashboard"
+                src={BI_DASHBOARD_URL}
                 style={{
-                  background: '#6a1b9a',
-                  color: '#fff',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '4px',
-                  textDecoration: 'none',
-                  marginBottom: '1rem'
+                  width: '100%',
+                  height: '100%',
+                  border: 'none'
                 }}
-              >
-                Open BI Dashboard
-              </a>
+                allowFullScreen
+              />
             </div>
 
-            <h3 style={{ color: '#6a1b9a' }}>Employees' Questionnaire Results</h3>
-            {results.length === 0 ? (
-              <p style={{ color: '#555' }}>No results yet.</p>
-            ) : results.map(emp => (
-              <div key={emp.user_id} style={{
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                padding: '1rem',
-                marginBottom: '1rem'
-              }}>
-                <h4 style={{ margin: '0 0 .5rem', color: '#333' }}>
-                  {emp.name}
-                </h4>
-                <ul style={{ margin: 0, paddingLeft: '1.25rem' }}>
-                  {emp.results.map((r,i) => (
-                    <li key={i} style={{ color: '#555', marginBottom: '0.25rem' }}>
-                      <strong>{r.questionnaire}</strong> – Score: {r.score}, Risk: {r.risk_level}, Date: {r.date}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            {/* Optional fallback/results preview */}
+            <div style={{ marginTop: '1rem' }}>
+              {results.length === 0 ? (
+                <p style={{ color: '#555' }}>No results yet.</p>
+              ) : results.map(emp => (
+                <div key={emp.user_id} style={{
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  padding: '1rem',
+                  marginBottom: '1rem'
+                }}>
+                  <h4 style={{ margin: '0 0 .5rem', color: '#333' }}>
+                    {emp.name}
+                  </h4>
+                  <ul style={{ margin: 0, paddingLeft: '1.25rem' }}>
+                    {emp.results.map((r, i) => (
+                      <li key={i} style={{ color: '#555', marginBottom: '0.25rem' }}>
+                        <strong>{r.questionnaire}</strong> – Score: {r.score}, Risk: {r.risk_level}, Date: {r.date}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </>
         )}
       </div>

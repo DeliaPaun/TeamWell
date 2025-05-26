@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="50" xmlns="http://www.w3.org/2000/svg">
+  <g fill="#ffffff">
+    <circle cx="25" cy="25" r="10"/>
+    <circle cx="45" cy="15" r="8"/>
+    <circle cx="45" cy="35" r="8"/>
+  </g>
+  <text x="70" y="32" font-family="Arial, sans-serif" font-size="24" fill="#ffffff">TeamWell</text>
+</svg>

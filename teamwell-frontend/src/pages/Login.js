@@ -19,35 +19,55 @@ export default function Login() {
       localStorage.setItem('role', user.role);
       navigate('/questionnaires');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login invalid');
+      setError(err.response?.data?.message || 'Date invalide');
     }
   };
 
   return (
     <div style={{
-      minHeight: '100vh',
+      position: 'relative',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(135deg, #9c27b0, #ba68c8)',
+      height: '100vh',
+      background: 'linear-gradient(to bottom, #283593 0%, #ffffff 100%)',
+      fontFamily: "'Poppins', sans-serif",
       padding: '2rem'
     }}>
-      <form
-        onSubmit={handleLogin}
-        style={{
-          background: 'white',
-          borderRadius: '8px',
-          padding: '2rem',
-          maxWidth: '360px',
-          width: '100%',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem'
-        }}
-      >
-        <h2 style={{ textAlign: 'center', margin: 0, color: '#6a1b9a' }}>
-          Login
+      {/* Logo + TEAMWELL în colțul din stânga-sus */}
+      <div style={{
+        position: 'absolute',
+        top: '1.5rem',
+        left: '1.5rem',
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <img
+          src="/logo.svg"
+          alt="TeamWell logo"
+          style={{ width: '250px', height: 'auto' }}
+        />
+      </div>
+
+      <form onSubmit={handleLogin} style={{
+        background: '#FFFFFF',
+        borderRadius: '10px',
+        padding: '2.5rem',
+        width: '100%',
+        maxWidth: '400px',
+        boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1.25rem',
+        zIndex: 1
+      }}>
+        <h2 style={{
+          fontSize: '1.75rem',
+          color: '#283593',
+          margin: 0,
+          textAlign: 'center'
+        }}>
+          Autentificare
         </h2>
 
         <input
@@ -57,29 +77,37 @@ export default function Login() {
           onChange={e => setEmail(e.target.value)}
           required
           style={{
-            padding: '0.75rem',
+            padding: '0.75rem 1rem',
             fontSize: '1rem',
-            border: '1px solid #ccc',
-            borderRadius: '4px'
+            border: '1px solid #DDD',
+            borderRadius: '6px',
+            outline: 'none',
+            transition: 'border-color .2s ease'
           }}
+          onFocus={e => (e.currentTarget.style.borderColor = '#283593')}
+          onBlur={e => (e.currentTarget.style.borderColor = '#DDD')}
         />
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Parolă"
           value={password}
           onChange={e => setPassword(e.target.value)}
           required
           style={{
-            padding: '0.75rem',
+            padding: '0.75rem 1rem',
             fontSize: '1rem',
-            border: '1px solid #ccc',
-            borderRadius: '4px'
+            border: '1px solid #DDD',
+            borderRadius: '6px',
+            outline: 'none',
+            transition: 'border-color .2s ease'
           }}
+          onFocus={e => (e.currentTarget.style.borderColor = '#283593')}
+          onBlur={e => (e.currentTarget.style.borderColor = '#DDD')}
         />
 
         {error && (
-          <p style={{ color: 'red', margin: 0, textAlign: 'center' }}>
+          <p style={{ color: '#E53935', textAlign: 'center', margin: 0 }}>
             {error}
           </p>
         )}
@@ -87,40 +115,63 @@ export default function Login() {
         <button
           type="submit"
           style={{
+            background: '#283593',
+            color: '#FFFFFF',
+            border: 'none',
             padding: '0.75rem',
             fontSize: '1rem',
-            background: '#6a1b9a',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
+            fontWeight: 600,
+            borderRadius: '6px',
+            cursor: 'pointer',
+            transition: 'background .2s ease, transform .1s ease'
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = '#1A237E';
+            e.currentTarget.style.transform = 'scale(1.02)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = '#283593';
+            e.currentTarget.style.transform = 'scale(1)';
           }}
         >
-          Login
+          Intră în cont
         </button>
 
-        <p style={{ textAlign: 'center', margin: 0 }}>
-          Don't have an account yet?{' '}
-          <Link to="/register" style={{ color: '#6a1b9a' }}>
-            Register
-          </Link>
-        </p>
+        <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+          <span style={{ fontSize: '0.9rem', color: '#555' }}>
+            Nu ai cont?{' '}
+            <Link to="/register" style={{ color: '#283593', fontWeight: 500 }}>
+              Creează cont
+            </Link>
+          </span>
+        </div>
 
-        <Link
-          to="/"
-          style={{
-            display: 'block',
-            textAlign: 'center',
-            marginTop: '1rem',
-            padding: '0.5rem',
-            color: '#6a1b9a',
-            textDecoration: 'none',
-            border: '1px solid #6a1b9a',
-            borderRadius: '4px'
-          }}
-        >
-          Home Page
-        </Link>
+        {/* Buton de revenire la Homepage */}
+        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+          <Link
+            to="/"
+            style={{
+              display: 'inline-block',
+              background: 'transparent',
+              color: '#283593',
+              border: '1px solid #283593',
+              padding: '0.5rem 1rem',
+              borderRadius: '6px',
+              textDecoration: 'none',
+              transition: 'background .2s ease, color .2s ease'
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = '#283593';
+              e.currentTarget.style.color = '#FFFFFF';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.color = '#283593';
+            }}
+          >
+            Pagina Principală
+          </Link>
+        </div>
       </form>
     </div>
   );
