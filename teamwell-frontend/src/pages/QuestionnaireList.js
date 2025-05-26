@@ -137,6 +137,25 @@ export default function QuestionnaireList() {
         {/* Manager/Admin view textual only */}
         {isManagerOrAdmin && (
           <>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+              <a
+                href={process.env.REACT_APP_PBI_PUBLISH_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: '#0288D1',
+                  color: '#FFFFFF',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  transition: 'background .2s'
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = '#0277BD'}
+                onMouseLeave={e => e.currentTarget.style.background = '#0288D1'}
+              >
+                Open Power BI Report
+              </a>
+            </div>
             <h3 style={{ color: '#283593', marginTop: 0 }}>Employees' Questionnaire Results</h3>
             <div style={{ marginTop: '1rem' }}>
               {results.length === 0 ? (
