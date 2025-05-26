@@ -47,7 +47,6 @@ async function submitResponses(req, res, next) {
       `SELECT team_id
          FROM team_member
         WHERE user_id = $1
-          AND joined_at <= CURRENT_DATE
         ORDER BY joined_at DESC
         LIMIT 1`,
       [userId]
@@ -63,7 +62,7 @@ async function submitResponses(req, res, next) {
     );
     const burnoutId = bsRes.rows[0].id;
 
-    if (riskLevel === 'medium' || riskLevel === 'high') {
+    if ((riskLevel === 'medium' || riskLevel === 'high') && teamId) {
       const alertLevel = riskLevel === 'high' ? 'critical' : 'warning';
       const message =
         riskLevel === 'high'

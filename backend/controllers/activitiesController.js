@@ -21,23 +21,22 @@ async function createActivity(req, res, next) {
       `SELECT team_id
          FROM team_member
         WHERE user_id = $1
-          AND joined_at <= $2
         ORDER BY joined_at DESC
         LIMIT 1`,
       [userId, usedDate]
     );
     const teamId = tmRes.rows[0]?.team_id || null;
 
-    if (tasksCompleted === 0) {
+    if (tasksCompleted === 0 && teamId) {
       await pool.query(
         `INSERT INTO alerts
            (user_id, team_id, source_type, burnout_id, activity_id, alert_level, message)
-         VALUES ($1, $2, 'activity', NULL, $3, 'info', $4)`,
-        [userId, teamId, activityId, 'Nicio sarcină finalizată astăzi.']
+         VALUES ($1, $2, 'activity', NULL, $3, 'info', $4, 'Nicio sarcină finalizată astăzi.')`,
+        [userId, teamId, activityId]
       );
     }
 
-    if (hoursWorked < 2) {
+    if (hoursWorked < 2 && teamId) {
       await pool.query(
         `INSERT INTO alerts
            (user_id, team_id, source_type, burnout_id, activity_id, alert_level, message)
