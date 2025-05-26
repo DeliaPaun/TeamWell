@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import API from '../api';
 
 export default function Questionnaire() {
@@ -8,28 +8,28 @@ export default function Questionnaire() {
   const [answers, setAnswers]     = useState({});
   const [error, setError]         = useState('');
   const navigate                  = useNavigate();
-  const location                  = useLocation();
-  const user                      = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     API.get(`/questionnaires/${id}/questions`)
       .then(res => {
         setQuestions(res.data);
+        // inițializez răspunsurile goale
         const init = {};
-        res.data.forEach(q => { init[q.id] = ''; });
+        res.data.forEach(q => init[q.id] = '');
         setAnswers(init);
       })
-      .catch(() => setError('Could not load questions.'));
+      .catch(() => setError('Nu s-au putut încărca întrebările.'));
   }, [id]);
 
-  const handleChange = (qid, val) => {
-    setAnswers(prev => ({ ...prev, [qid]: val }));
+  const handleChange = (qid, value) => {
+    setAnswers(prev => ({ ...prev, [qid]: value }));
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
     setError('');
 
+    const user = JSON.parse(localStorage.getItem('user'));
     const payload = {
       userId:          user.id,
       questionnaireId: Number(id),
@@ -45,38 +45,74 @@ export default function Questionnaire() {
         state: { successMsg: 'Chestionarul a fost trimis cu succes!' }
       });
     } catch (err) {
-      setError(err.response?.data?.message || 'Error submitting.');
+      setError(err.response?.data?.message || 'Eroare la trimiterea chestionarului.');
     }
   };
 
   return (
     <div style={{
+      position: 'relative',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #9c27b0, #ba68c8)',
+      background: 'linear-gradient(to bottom, #283593 0%, #ffffff 100%)',
+      fontFamily: "'Poppins', sans-serif",
       padding: '2rem'
     }}>
+      {/* Logo + TEAMWELL */}
+      <div style={{
+        position: 'absolute',
+        top: '1.5rem',
+        left: '1.5rem',
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <img
+          src="/logo.svg"
+          alt="TeamWell"
+          style={{ width: '200px', height: 'auto' }}
+        />
+      </div>
+
       <div style={{
         maxWidth: '600px',
-        margin: '0 auto',
-        background: 'white',
-        borderRadius: '8px',
+        margin: '4rem auto 0',
+        background: '#FFFFFF',
+        borderRadius: '10px',
         padding: '2rem',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+        boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
+        zIndex: 1
       }}>
-        <h2 style={{ color: '#6a1b9a', marginTop: 0 }}>Questionnaire #{id}</h2>
+        <h2 style={{
+          color: '#283593',
+          marginTop: 0,
+          textAlign: 'center'
+        }}>
+          Chestionar #{id}
+        </h2>
 
         {error && (
-          <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>
+          <p style={{
+            color: '#E53935',
+            textAlign: 'center',
+            margin: '1rem 0'
+          }}>
+            {error}
+          </p>
         )}
 
         <form onSubmit={handleSubmit} style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '1rem'
+          gap: '1.5rem'
         }}>
           {questions.map(q => (
-            <div key={q.id}>
-              <label style={{ fontWeight: 'bold', color: '#333' }}>{q.text}</label>
+            <div key={q.id} style={{ display: 'flex', flexDirection: 'column' }}>
+              <label style={{
+                fontWeight: 600,
+                color: '#333',
+                marginBottom: '0.5rem'
+              }}>
+                {q.text}
+              </label>
 
               {q.scale_type === 'scale_1_5' && (
                 <select
@@ -84,12 +120,13 @@ export default function Questionnaire() {
                   onChange={e => handleChange(q.id, e.target.value)}
                   required
                   style={{
-                    width: '100%',
-                    padding: '0.5rem',
-                    marginTop: '0.5rem'
+                    padding: '0.75rem 1rem',
+                    fontSize: '1rem',
+                    borderRadius: '6px',
+                    border: '1px solid #DDD'
                   }}
                 >
-                  <option value="">Select</option>
+                  <option value="">Selectează</option>
                   {[1,2,3,4,5].map(n => (
                     <option key={n} value={n}>{n}</option>
                   ))}
@@ -97,9 +134,9 @@ export default function Questionnaire() {
               )}
 
               {q.scale_type === 'choice' && (
-                <div style={{ marginTop: '0.5rem' }}>
+                <div style={{ display: 'flex', gap: '1rem' }}>
                   {['Da','Nu'].map(opt => (
-                    <label key={opt} style={{ marginRight: '1rem', color: '#555' }}>
+                    <label key={opt} style={{ color: '#555' }}>
                       <input
                         type="radio"
                         name={`q${q.id}`}
@@ -107,7 +144,7 @@ export default function Questionnaire() {
                         checked={answers[q.id] === opt}
                         onChange={e => handleChange(q.id, e.target.value)}
                         required
-                      /> {opt}
+                      />{' '}{opt}
                     </label>
                   ))}
                 </div>
@@ -118,31 +155,52 @@ export default function Questionnaire() {
                   value={answers[q.id]}
                   onChange={e => handleChange(q.id, e.target.value)}
                   required
+                  rows={4}
                   style={{
-                    width: '100%',
-                    padding: '0.5rem',
-                    marginTop: '0.5rem'
+                    padding: '0.75rem 1rem',
+                    fontSize: '1rem',
+                    borderRadius: '6px',
+                    border: '1px solid #DDD'
                   }}
                 />
               )}
             </div>
           ))}
 
-          <button
-            type="submit"
-            style={{
-              padding: '0.75rem',
-              fontSize: '1rem',
-              background: '#6a1b9a',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              marginTop: '1rem'
-            }}
+          <button type="submit" style={{
+            background: '#0288D1',
+            color: '#FFFFFF',
+            border: 'none',
+            padding: '0.75rem',
+            fontSize: '1rem',
+            fontWeight: 600,
+            borderRadius: '6px',
+            cursor: 'pointer',
+            transition: 'background .2s ease, transform .1s ease'
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#0277BD'; e.currentTarget.style.transform = 'scale(1.02)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#0288D1'; e.currentTarget.style.transform = 'scale(1)'; }}
           >
-            Submit
+            Trimite
           </button>
+
+          <Link to="/questionnaires" style={{
+            marginTop: '1rem',
+            textAlign: 'center',
+            color: '#283593',
+            textDecoration: 'none',
+            fontSize: '0.9rem',
+            border: '1px solid #283593',
+            padding: '0.5rem 1rem',
+            borderRadius: '6px',
+            display: 'inline-block',
+            transition: 'background .2s, color .2s'
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#283593'; e.currentTarget.style.color = '#FFFFFF'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#283593'; }}
+          >
+            Înapoi la chestionare
+          </Link>
         </form>
       </div>
     </div>
