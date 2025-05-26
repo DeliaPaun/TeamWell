@@ -13,7 +13,6 @@ export default function Questionnaire() {
     API.get(`/questionnaires/${id}/questions`)
       .then(res => {
         setQuestions(res.data);
-        // inițializez răspunsurile goale
         const init = {};
         res.data.forEach(q => init[q.id] = '');
         setAnswers(init);
@@ -40,7 +39,7 @@ export default function Questionnaire() {
     };
 
     try {
-      await API.post('/questionnaires/submit', payload);
+      await API.post(`/questionnaires/${id}/submit`, payload);
       navigate('/questionnaires', {
         state: { successMsg: 'Chestionarul a fost trimis cu succes!' }
       });
