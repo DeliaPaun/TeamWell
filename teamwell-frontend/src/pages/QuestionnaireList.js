@@ -2,10 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import API from '../api';
 
-const BI_DASHBOARD_URL =
-  process.env.REACT_APP_METABASE_DASHBOARD_URL ||
-  'http://localhost:3002';
-
 export default function QuestionnaireList() {
   const [questionnaires, setQuestionnaires] = useState([]);
   const [results, setResults]               = useState([]);
@@ -38,108 +34,97 @@ export default function QuestionnaireList() {
 
   if (!user) return null;
   const { first_name, last_name, role } = user;
-  const fullName                        = `${first_name || ''} ${last_name || ''}`.trim();
-
+  const fullName = `${first_name || ''} ${last_name || ''}`.trim();
   const isManagerOrAdmin = role === 'manager' || role === 'admin';
 
   return (
     <div style={{
+      position: 'relative',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #9c27b0, #ba68c8)',
+      background: 'linear-gradient(to bottom, #283593 0%, #ffffff 100%)',
+      fontFamily: "'Poppins', sans-serif",
       padding: '2rem'
     }}>
+      {/* Logo + TEAMWELL */}
       <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        background: 'white',
-        borderRadius: '8px',
-        padding: '2rem',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1.5rem'
+        position: 'absolute', top: '1.5rem', left: '1.5rem',
+        display: 'flex', alignItems: 'center'
+      }}>
+        <img src="/logo.svg" alt="TeamWell" style={{ width: '200px', height: 'auto' }} />
+        <span style={{
+          color: '#283593', fontSize: '1.75rem', fontWeight: 700,
+          marginLeft: '0.75rem', textTransform: 'uppercase'
+        }}>
+          TEAMWELL
+        </span>
+      </div>
+
+      <div style={{
+        maxWidth: '1200px', margin: '0 auto', background: '#FFFFFF',
+        borderRadius: '10px', padding: '2rem', boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
+        display: 'flex', flexDirection: 'column', gap: '1.5rem', zIndex: 1
       }}>
         {/* Success banner */}
         {successMsg && (
           <div style={{
-            padding: '1rem',
-            background: '#e8f5e9',
-            border: '1px solid #66bb6a',
-            borderRadius: '4px',
-            color: '#2e7d32',
-            marginBottom: '1rem'
+            padding: '1rem', background: '#e8f5e9', border: '1px solid #66bb6a',
+            borderRadius: '6px', color: '#2e7d32', textAlign: 'center'
           }}>
             {successMsg}
           </div>
         )}
 
         {/* Header */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <h2 style={{ margin: 0, color: '#6a1b9a' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ margin: 0, color: '#283593' }}>
             Welcome, {fullName}!
           </h2>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.75rem' }}>
             <button onClick={handleProfile} style={{
-              background: '#fff',
-              color: '#6a1b9a',
-              border: '1px solid #6a1b9a',
-              padding: '0.5rem 1rem',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}>
+              background: 'transparent', color: '#283593', border: '1px solid #283593',
+              padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer',
+              transition: 'background .2s, color .2s'
+            }} onMouseEnter={e => { e.currentTarget.style.background = '#283593'; e.currentTarget.style.color = '#FFFFFF'; }}
+               onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#283593'; }}>
               Profile
             </button>
             <button onClick={handleLogout} style={{
-              background: '#6a1b9a',
-              color: 'white',
-              border: 'none',
-              padding: '0.5rem 1rem',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}>
+              background: '#283593', color: '#FFFFFF', border: 'none',
+              padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer',
+              transition: 'background .2s'
+            }} onMouseEnter={e => e.currentTarget.style.background = '#1A237E'}
+               onMouseLeave={e => e.currentTarget.style.background = '#283593'}>
               Logout
             </button>
           </div>
         </div>
 
         <p style={{ margin: 0, color: '#555' }}>
-          Your role: <strong>{role}</strong>
+          Role: <strong>{role}</strong>
         </p>
 
         {/* Employee view */}
         {!isManagerOrAdmin && (
           <>
             <button onClick={() => navigate('/activities')} style={{
-              background: '#6a1b9a',
-              color: '#fff',
-              border: 'none',
-              padding: '0.5rem 1rem',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              alignSelf: 'flex-start'
-            }}>
+              background: '#283593', color: '#FFFFFF', border: 'none',
+              padding: '0.75rem 1.5rem', borderRadius: '6px', cursor: 'pointer',
+              alignSelf: 'flex-start', transition: 'background .2s'
+            }} onMouseEnter={e => e.currentTarget.style.background = '#1A237E'}
+               onMouseLeave={e => e.currentTarget.style.background = '#283593'}>
               Raportează activitate zilnică
             </button>
 
-            <h3 style={{ color: '#6a1b9a' }}>Available Questionnaires</h3>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
+            <h3 style={{ color: '#283593', marginBottom: '0.5rem' }}>Available Questionnaires</h3>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               {questionnaires.map(q => (
-                <li key={q.id} style={{ margin: '0.5rem 0' }}>
-                  <Link
-                    to={`/questionnaires/${q.id}`}
-                    style={{
-                      textDecoration: 'none',
-                      color: '#6a1b9a',
-                      padding: '0.5rem 1rem',
-                      display: 'block',
-                      border: '1px solid #ccc',
-                      borderRadius: '4px'
-                    }}
-                  >
+                <li key={q.id}>
+                  <Link to={`/questionnaires/${q.id}`} style={{
+                    textDecoration: 'none', color: '#FFFFFF', background: '#6A1B9A',
+                    padding: '0.75rem 1rem', display: 'block', borderRadius: '6px',
+                    textAlign: 'center', transition: 'background .2s'
+                  }} onMouseEnter={e => e.currentTarget.style.background = '#7B1FA2'}
+                     onMouseLeave={e => e.currentTarget.style.background = '#6A1B9A'}>
                     {q.title}
                   </Link>
                 </li>
@@ -151,44 +136,25 @@ export default function QuestionnaireList() {
         {/* Manager/Admin view */}
         {isManagerOrAdmin && (
           <>
-            <h3 style={{ color: '#6a1b9a', marginTop: 0 }}>
-              Employees' Questionnaire Results
-            </h3>
+            <h3 style={{ color: '#283593', marginTop: 0 }}>Employees' Questionnaire Results</h3>
 
             {/* Embedded BI dashboard */}
-            <div style={{
-              width: '100%',
-              height: '600px',
-              borderRadius: '8px',
-              overflow: 'hidden',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-            }}>
+            <div style={{ width: '100%', height: '600px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
               <iframe
                 title="BI Dashboard"
-                src={BI_DASHBOARD_URL}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  border: 'none'
-                }}
+                src={process.env.REACT_APP_API_URL + '/powerbi/embed-info'}
+                style={{ width: '100%', height: '100%', border: 'none' }}
                 allowFullScreen
               />
             </div>
 
-            {/* Optional fallback/results preview */}
+            {/* Textual fallback */}
             <div style={{ marginTop: '1rem' }}>
               {results.length === 0 ? (
                 <p style={{ color: '#555' }}>No results yet.</p>
               ) : results.map(emp => (
-                <div key={emp.user_id} style={{
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  padding: '1rem',
-                  marginBottom: '1rem'
-                }}>
-                  <h4 style={{ margin: '0 0 .5rem', color: '#333' }}>
-                    {emp.name}
-                  </h4>
+                <div key={emp.user_id} style={{ border: '1px solid #DDD', borderRadius: '6px', padding: '1rem', marginBottom: '1rem' }}>
+                  <h4 style={{ margin: '0 0 .5rem', color: '#283593' }}>{emp.name}</h4>
                   <ul style={{ margin: 0, paddingLeft: '1.25rem' }}>
                     {emp.results.map((r, i) => (
                       <li key={i} style={{ color: '#555', marginBottom: '0.25rem' }}>
