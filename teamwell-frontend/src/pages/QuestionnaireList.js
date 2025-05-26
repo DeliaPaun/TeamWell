@@ -51,18 +51,19 @@ export default function QuestionnaireList() {
         display: 'flex', alignItems: 'center'
       }}>
         <img src="/logo.svg" alt="TeamWell" style={{ width: '200px', height: 'auto' }} />
-        <span style={{
-          color: '#283593', fontSize: '1.75rem', fontWeight: 700,
-          marginLeft: '0.75rem', textTransform: 'uppercase'
-        }}>
-          TEAMWELL
-        </span>
       </div>
 
       <div style={{
-        maxWidth: '1200px', margin: '0 auto', background: '#FFFFFF',
-        borderRadius: '10px', padding: '2rem', boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
-        display: 'flex', flexDirection: 'column', gap: '1.5rem', zIndex: 1
+        maxWidth: '1200px',
+        margin: '4rem auto 0',
+        background: '#FFFFFF',
+        borderRadius: '10px',
+        padding: '2rem',
+        boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1.5rem',
+        zIndex: 1
       }}>
         {/* Success banner */}
         {successMsg && (
@@ -107,11 +108,11 @@ export default function QuestionnaireList() {
         {!isManagerOrAdmin && (
           <>
             <button onClick={() => navigate('/activities')} style={{
-              background: '#283593', color: '#FFFFFF', border: 'none',
+              background: '#0288D1', color: '#FFFFFF', border: 'none',
               padding: '0.75rem 1.5rem', borderRadius: '6px', cursor: 'pointer',
               alignSelf: 'flex-start', transition: 'background .2s'
-            }} onMouseEnter={e => e.currentTarget.style.background = '#1A237E'}
-               onMouseLeave={e => e.currentTarget.style.background = '#283593'}>
+            }} onMouseEnter={e => e.currentTarget.style.background = '#0277BD'}
+               onMouseLeave={e => e.currentTarget.style.background = '#0288D1'}>
               Raportează activitate zilnică
             </button>
 
@@ -120,11 +121,11 @@ export default function QuestionnaireList() {
               {questionnaires.map(q => (
                 <li key={q.id}>
                   <Link to={`/questionnaires/${q.id}`} style={{
-                    textDecoration: 'none', color: '#FFFFFF', background: '#6A1B9A',
+                    textDecoration: 'none', color: '#FFFFFF', background: '#0288D1',
                     padding: '0.75rem 1rem', display: 'block', borderRadius: '6px',
                     textAlign: 'center', transition: 'background .2s'
-                  }} onMouseEnter={e => e.currentTarget.style.background = '#7B1FA2'}
-                     onMouseLeave={e => e.currentTarget.style.background = '#6A1B9A'}>
+                  }} onMouseEnter={e => e.currentTarget.style.background = '#0277BD'}
+                     onMouseLeave={e => e.currentTarget.style.background = '#0288D1'}>
                     {q.title}
                   </Link>
                 </li>
@@ -133,22 +134,10 @@ export default function QuestionnaireList() {
           </>
         )}
 
-        {/* Manager/Admin view */}
+        {/* Manager/Admin view textual only */}
         {isManagerOrAdmin && (
           <>
             <h3 style={{ color: '#283593', marginTop: 0 }}>Employees' Questionnaire Results</h3>
-
-            {/* Embedded BI dashboard */}
-            <div style={{ width: '100%', height: '600px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-              <iframe
-                title="BI Dashboard"
-                src={process.env.REACT_APP_API_URL + '/powerbi/embed-info'}
-                style={{ width: '100%', height: '100%', border: 'none' }}
-                allowFullScreen
-              />
-            </div>
-
-            {/* Textual fallback */}
             <div style={{ marginTop: '1rem' }}>
               {results.length === 0 ? (
                 <p style={{ color: '#555' }}>No results yet.</p>
