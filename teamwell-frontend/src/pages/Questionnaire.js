@@ -11,7 +11,6 @@ export default function Questionnaire() {
   const location                  = useLocation();
   const user                      = JSON.parse(localStorage.getItem('user'));
 
-  // Fetch questions
   useEffect(() => {
     API.get(`/questionnaires/${id}/questions`)
       .then(res => {

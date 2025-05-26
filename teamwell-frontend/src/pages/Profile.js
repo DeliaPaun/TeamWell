@@ -1,11 +1,10 @@
-// src/pages/Profile.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import API from '../api';               // adaugă importul
+import API from '../api';               
 
 export default function Profile() {
   const [user, setUser]   = useState(null);
-  const [team, setTeam]   = useState(null);   // <--- nou
+  const [team, setTeam]   = useState(null);  
   const navigate          = useNavigate();
 
   useEffect(() => {
@@ -24,7 +23,6 @@ export default function Profile() {
     }
   }, [navigate]);
 
-  // după ce avem user, facem request pentru echipa lui
   useEffect(() => {
     if (!user) return;
     API.get(`/users/${user.id}/team`)

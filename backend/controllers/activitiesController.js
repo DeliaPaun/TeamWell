@@ -4,7 +4,6 @@ async function createActivity(req, res, next) {
   try {
     const { userId, date, tasksCompleted, hoursWorked } = req.body;
 
-    // validări
     if (tasksCompleted < 0 || hoursWorked < 0 || hoursWorked > 24) {
       return res.status(400).json({ error: 'Valori invalide pentru activitate.' });
     }
@@ -15,7 +14,7 @@ async function createActivity(req, res, next) {
       [userId, date, tasksCompleted, hoursWorked]
     );
 
-    res.status(201).json({ message: 'Activitate înregistrată cu succes.' });
+    res.status(201).json({ message: 'Activity successfully logged.' });
   } catch (err) {
     next(err);
   }

@@ -1,7 +1,6 @@
 const pool = require('../db');
 
 exports.calculateAndStoreScore = async (userId, teamId, questionnaireId, date) => {
-  // Exemplu simplu: media valorilor
   const res = await pool.query(
     `SELECT AVG(answer_value)::numeric(5,2) AS avg_score
      FROM responses r

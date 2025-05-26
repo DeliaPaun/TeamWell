@@ -1,4 +1,3 @@
-// src/pages/LandingPage.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 

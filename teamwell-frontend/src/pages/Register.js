@@ -1,4 +1,3 @@
-// src/pages/Register.jsx
 import React, { useState } from 'react';
 import API from '../api';
 import { useNavigate, Link } from 'react-router-dom';
@@ -9,7 +8,7 @@ export default function Register() {
     last_name:  '',
     email:      '',
     password:   '',
-    teamName:   '',      // adăugat
+    teamName:   '',      
     role:       ''
   });
   const [error, setError] = useState('');
@@ -24,7 +23,6 @@ export default function Register() {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    // validări
     if (form.password.length !== 10) {
       setError('Parola trebuie să aibă exact 10 caractere.');
       return;

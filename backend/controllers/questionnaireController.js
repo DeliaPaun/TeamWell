@@ -1,4 +1,3 @@
-// src/controllers/questionnairesController.js
 const pool = require('../db');
 
 async function submitResponses(req, res, next) {
@@ -6,7 +5,6 @@ async function submitResponses(req, res, next) {
   const { userId, responses } = req.body;
 
   try {
-    // 1) Salvează fiecare răspuns
     await Promise.all(responses.map(r =>
       pool.query(
         `INSERT INTO responses
@@ -16,7 +14,6 @@ async function submitResponses(req, res, next) {
       )
     ));
 
-    // 2) Calculează scorul total
     const scoreRes = await pool.query(
       `SELECT 
         SUM(r.answer_value::integer) AS total
@@ -31,12 +28,10 @@ async function submitResponses(req, res, next) {
     );
     const totalScore = scoreRes.rows[0].total || 0;
 
-    // 3) Determină risk_level după praguri
     let riskLevel = 'low';
     if (totalScore >= 80)      riskLevel = 'high';
     else if (totalScore >= 50) riskLevel = 'medium';
 
-    // 4) Află echipa curentă a user-ului la data chestionarului
     const tmRes = await pool.query(
       `SELECT team_id
          FROM team_member
@@ -48,7 +43,6 @@ async function submitResponses(req, res, next) {
     );
     const teamId = tmRes.rows[0]?.team_id || null;
 
-    // 5) Inserează în burnout_scores
     await pool.query(
       `INSERT INTO burnout_scores
          (user_id, team_id, questionnaire_id, date, score, risk_level, created_at)

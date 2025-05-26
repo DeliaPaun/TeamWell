@@ -1,4 +1,3 @@
-// routes/questionnaire.js
 const express = require('express');
 const router  = express.Router();
 const pool    = require('../db');
@@ -22,7 +21,6 @@ router.get('/results', requireAuth, async (req, res) => {
       ORDER BY u.last_name, last_date DESC
     `);
 
-    // Grupăm rezultatele per user
     const byUser = rows.reduce((acc, row) => {
       const key = row.user_id;
       if (!acc[key]) {

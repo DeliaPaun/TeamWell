@@ -31,7 +31,6 @@ router.get('/results', async (req, res) => {
   }
 });
 
-// Obține toate chestionarele
 router.get('/', async (req, res) => {
   try {
     const result = await pool.query('SELECT id, title FROM questionnaires');
@@ -42,7 +41,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Obține întrebările pentru un chestionar specific
 router.get('/:id/questions', async (req, res) => {
   const questionnaireId = req.params.id;
   try {
@@ -57,7 +55,6 @@ router.get('/:id/questions', async (req, res) => {
   }
 });
 
-// Trimite răspunsurile la chestionar
 router.post('/submit', async (req, res) => {
   const { userId, questionnaireId, responses } = req.body;
 
@@ -66,7 +63,6 @@ router.post('/submit', async (req, res) => {
   }
 
   try {
-    // 1) Salvează fiecare răspuns
     await Promise.all(responses.map(r =>
       pool.query(
         `INSERT INTO responses
@@ -76,7 +72,6 @@ router.post('/submit', async (req, res) => {
       )
     ));
 
-    // 2) Calculează scorul total de burnout
     const scoreRes = await pool.query(
       `SELECT 
         SUM(r.answer_value::integer) AS total
@@ -91,12 +86,10 @@ router.post('/submit', async (req, res) => {
     );
     const totalScore = Number(scoreRes.rows[0].total) || 0;
 
-    // 3) Determină nivelul de risc
     let riskLevel = 'low';
     if (totalScore >= 80)      riskLevel = 'high';
     else if (totalScore >= 50) riskLevel = 'medium';
 
-    // 4) Află echipa curentă a utilizatorului
     const tmRes = await pool.query(
       `SELECT team_id
          FROM team_member
@@ -108,7 +101,6 @@ router.post('/submit', async (req, res) => {
     );
     const teamId = tmRes.rows[0]?.team_id || null;
 
-    // 5) Inserează în burnout_scores
     await pool.query(
       `INSERT INTO burnout_scores
          (user_id, team_id, questionnaire_id, date, score, risk_level, created_at)

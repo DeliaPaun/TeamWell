@@ -2,19 +2,16 @@ const pool = require('./db');
 
 async function seedPerformanceQuestions() {
   try {
-    // 1) Inserează chestionarul
     await pool.query(`
       INSERT INTO questionnaires (title, version, created_at)
       VALUES ('Performance Assessment', '1.0', NOW())
     `);
 
-    // 2) Ia ID-ul nou creat
     const result = await pool.query(
       `SELECT id FROM questionnaires WHERE title = 'Performance Assessment'`
     );
     const questionnaireId = result.rows[0].id;
 
-    // 3) Definește întrebările
     const questions = [
       { text: 'Cât de clare îți sunt obiectivele de performanță la locul de muncă?', scale_type: 'scale_1_5' },
       { text: 'Primești feedback constructiv de la superiori în mod regulat?', scale_type: 'choice' },
@@ -28,7 +25,6 @@ async function seedPerformanceQuestions() {
       { text: 'Ai propuneri pentru creșterea eficienței în echipă?', scale_type: 'text' }
     ];
 
-    // 4) Inserează fiecare întrebare
     for (let q of questions) {
       await pool.query(
         `INSERT INTO questions (questionnaire_id, text, scale_type)

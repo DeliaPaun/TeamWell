@@ -14,14 +14,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* 1) Landing la / */}
         <Route path="/" element={<LandingPage />} />
 
-        {/* 2) Rute publice */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* 3) Rute protejate */}
         <Route
           path="/questionnaires"
           element={
@@ -71,7 +68,6 @@ function App() {
           }
         />
 
-        {/* 4) Orice altceva → la landing */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

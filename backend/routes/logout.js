@@ -7,7 +7,7 @@ router.post('/logout', (req, res) => {
       console.error('Eroare la distrugerea sesiunii:', err);
       return res.status(500).json({ message: 'Eroare la logout' });
     }
-    res.clearCookie('connect.sid'); // Asigură-te că numele cookie-ului corespunde cu cel setat în express-session
+    res.clearCookie('connect.sid'); 
     res.status(200).json({ message: 'Delogare cu succes' });
   });
 });

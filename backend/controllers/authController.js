@@ -32,7 +32,6 @@ exports.register = async (req, res) => {
       .json({ message: 'Email already in use.' });
   }
 
-  // 1) Creare hash parolă și user nou
   const hash = await bcrypt.hash(password, 10);
   const user = await createUser(
     email,
@@ -42,7 +41,6 @@ exports.register = async (req, res) => {
     role
   );
 
-  // 2) Găsește sau creează echipa
   let teamId;
   const teamRes = await pool.query(
     `SELECT id 
@@ -67,7 +65,6 @@ exports.register = async (req, res) => {
     teamId = insertTeam.rows[0].id;
   }
 
-  // 3) Leagă user-ul de echipă
   await pool.query(
     `INSERT INTO team_member
        (user_id, team_id, joined_at)
@@ -75,7 +72,6 @@ exports.register = async (req, res) => {
     [user.id, teamId]
   );
 
-  // 4) Răspuns
   res
     .status(201)
     .json({ id: user.id, email: user.email, teamId });

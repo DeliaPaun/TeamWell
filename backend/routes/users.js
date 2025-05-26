@@ -1,10 +1,7 @@
-// src/routes/users.js
 const express = require('express');
 const router  = express.Router();
 const pool    = require('../db');
 
-// GET /api/users/:id/team
-// returnează echipa curentă a user-ului (ultimul joined_at)
 router.get('/:id/team', async (req, res) => {
   const userId = req.params.id;
   try {

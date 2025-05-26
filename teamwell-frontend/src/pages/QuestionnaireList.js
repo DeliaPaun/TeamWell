@@ -14,20 +14,17 @@ export default function QuestionnaireList() {
   const location                            = useLocation();
   const successMsg                          = location.state?.successMsg;
 
-  // Preia userul din localStorage
   useEffect(() => {
     const stored = localStorage.getItem('user');
     if (stored) setUser(JSON.parse(stored));
   }, []);
 
-  // Preia lista de chestionare
   useEffect(() => {
     API.get('/questionnaires')
       .then(res => setQuestionnaires(res.data))
       .catch(err => console.error(err));
   }, []);
 
-  // Preia rezultatele pentru manager/admin
   useEffect(() => {
     if (user?.role === 'manager' || user?.role === 'admin') {
       API.get('/questionnaires/results')
