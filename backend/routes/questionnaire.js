@@ -27,7 +27,7 @@ router.get('/:id/questions', async (req, res) => {
   }
 });
 
-router.post('/submit', submitResponses);
+router.post('/:id/submit', submitResponses);
 
 router.get('/results', async (req, res) => {
   try {
