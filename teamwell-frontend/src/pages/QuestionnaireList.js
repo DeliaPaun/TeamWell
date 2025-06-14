@@ -26,7 +26,7 @@ export default function QuestionnaireList() {
     if (user?.role === 'manager' || user?.role === 'admin') {
       API.get('/questionnaires/results')
         .then(res => setResults(res.data))
-        .catch(err => console.error('Fetch results error:', err));
+        .catch(err => console.error('Eroare la returnarea rezultatelor:', err));
     }
   }, [user]);
 
@@ -38,7 +38,6 @@ export default function QuestionnaireList() {
   const fullName = `${first_name} ${last_name}`.trim();
   const isManagerOrAdmin = role === 'manager' || role === 'admin';
 
-  // Filtrează lista de useri care au cel puțin un rezultat
   const activeUsers = results.filter(emp => emp.results.length > 0);
 
   return (
@@ -49,15 +48,12 @@ export default function QuestionnaireList() {
       fontFamily: "'Poppins', sans-serif",
       padding: '2rem'
     }}>
-      {/* Logo */}
       <div style={{
         position: 'absolute', top: '1.5rem', left: '1.5rem',
         display: 'flex', alignItems: 'center'
       }}>
         <img src="/logo.svg" alt="TeamWell" style={{ width: '200px' }} />
       </div>
-
-      {/* Container */}
       <div style={{
         maxWidth: '1200px',
         margin: '4rem auto 0',
@@ -66,7 +62,6 @@ export default function QuestionnaireList() {
         boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
         overflow: 'hidden'
       }}>
-        {/* Header */}
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -77,15 +72,13 @@ export default function QuestionnaireList() {
           <h2 style={{ margin: 0, color: '#283593' }}>Welcome, {fullName}!</h2>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <button onClick={handleProfile} style={tabButtonStyle('#fff','#283593','#283593')}>
-              Profile
+              Profil
             </button>
             <button onClick={handleLogout} style={tabButtonStyle('#283593','#fff')}>
-              Logout
+              Deloghează-te
             </button>
           </div>
         </div>
-
-        {/* Tabs */}
         {isManagerOrAdmin && (
           <nav style={{ display: 'flex', borderBottom: '1px solid #eee' }}>
             {['dashboard','questionnaires','reports','users'].map(tab => (
@@ -105,8 +98,6 @@ export default function QuestionnaireList() {
             ))}
           </nav>
         )}
-
-        {/* Content */}
         <div style={{ padding: '2rem' }}>
           {successMsg && (
             <div style={{
@@ -128,9 +119,9 @@ export default function QuestionnaireList() {
                 />
               )}
 
-              {activeTab === 'questionnaires' && (
+              {activeTab === 'Chestionare' && (
                 <>
-                  <h3 style={{ color: '#283593' }}>Available Questionnaires</h3>
+                  <h3 style={{ color: '#283593' }}>Chestionare disponibile</h3>
                   <ul style={listGridStyle}>
                     {questionnaires.map(q => (
                       <li key={q.id}>
@@ -143,11 +134,11 @@ export default function QuestionnaireList() {
                 </>
               )}
 
-              {activeTab === 'reports' && (
+              {activeTab === 'Rapoarte' && (
                 <>
-                  <h3 style={{ color: '#283593' }}>Employees' Questionnaire Results</h3>
+                  <h3 style={{ color: '#283593' }}>Rezultate chestionare angajați</h3>
                   {results.length === 0
-                    ? <p style={{ color:'#555' }}>No results yet.</p>
+                    ? <p style={{ color:'#555' }}>Niciun rezultat încă.</p>
                     : results.map(emp => (
                       <div key={emp.user_id} style={resultCardStyle}>
                         <h4 style={{ margin:'0 0 .5rem', color:'#283593' }}>{emp.name}</h4>
@@ -164,11 +155,11 @@ export default function QuestionnaireList() {
                 </>
               )}
 
-              {activeTab === 'users' && (
+              {activeTab === 'Useri' && (
                 <>
-                  <h3 style={{ color: '#283593' }}>Active Users</h3>
+                  <h3 style={{ color: '#283593' }}>Utilizatori Activi</h3>
                   {activeUsers.length === 0
-                    ? <p style={{ color:'#555' }}>No users have completed questionnaires yet.</p>
+                    ? <p style={{ color:'#555' }}>Niciun utilizator nu a completat încă un chestionar.</p>
                     : (
                       <ul style={{ listStyle:'none', padding:0 }}>
                         {activeUsers.map(emp => (
@@ -185,12 +176,11 @@ export default function QuestionnaireList() {
               )}
             </>
           ) : (
-            // employee view
             <>
               <button onClick={() => navigate('/activities')} style={primaryButtonStyle}>
                 Raportează activitate zilnică
               </button>
-              <h3 style={{ color:'#283593' }}>Available Questionnaires</h3>
+              <h3 style={{ color:'#283593' }}>Chestionare disponibile</h3>
               <ul style={listGridStyle}>
                 {questionnaires.map(q => (
                   <li key={q.id}>
@@ -207,13 +197,11 @@ export default function QuestionnaireList() {
     </div>
   );
 }
-
-// Helpers & Styles
 const tabLabels = {
   dashboard:     'Dashboard',
-  questionnaires:'Questionnaires',
-  reports:       'Reports',
-  users:         'Users'
+  questionnaires:'Chestionare',
+  reports:       'Rapoarte',
+  users:         'Utilizatori'
 };
 
 const primaryButtonStyle = {

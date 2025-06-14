@@ -24,7 +24,7 @@ export default function Register() {
     e.preventDefault();
 
     if (form.password.length !== 10) {
-      setError('Parola trebuie să aibă exact 10 caractere.');
+      setError('Parola trebuie să aibă 10 caractere.');
       return;
     }
     if (!form.teamName.trim()) {
@@ -56,7 +56,6 @@ export default function Register() {
       fontFamily: "'Poppins', sans-serif",
       padding: '2rem'
     }}>
-      {/* Logo + TEAMWELL în colțul din stânga-sus */}
       <div style={{
         position: 'absolute',
         top: '1.5rem',
@@ -91,8 +90,6 @@ export default function Register() {
         }}>
           Înregistrare
         </h2>
-
-        {/* First & Last Name */}
         <div style={{ display: 'flex', gap: '0.75rem' }}>
           <input
             name="first_name"
@@ -131,8 +128,6 @@ export default function Register() {
             onBlur={e => (e.currentTarget.style.borderColor = '#DDD')}
           />
         </div>
-
-        {/* Email & Password */}
         <input
           name="email"
           type="email"
@@ -170,8 +165,6 @@ export default function Register() {
           onFocus={e => (e.currentTarget.style.borderColor = '#283593')}
           onBlur={e => (e.currentTarget.style.borderColor = '#DDD')}
         />
-
-        {/* Team & Role */}
         <input
           name="teamName"
           placeholder="Nume echipă"
@@ -241,8 +234,6 @@ export default function Register() {
         >
           Înregistrare
         </button>
-
-        {/* Buton de revenire la Homepage */}
         <div style={{ textAlign: 'center', marginTop: '1rem' }}>
           <Link
             to="/"

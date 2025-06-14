@@ -17,7 +17,6 @@ export default function LandingPage() {
         fontFamily: "'Poppins', sans-serif",
       }}
     >
-      {/* Logo + TEAMWELL în colțul din stânga-sus */}
       <div
         style={{
           position: 'absolute',
@@ -33,8 +32,6 @@ export default function LandingPage() {
           style={{ width: '200px', height: 'auto' }}
         />
       </div>
-
-      {/* Titlu centralizat */}
       <div style={{ textAlign: 'center', color: '#283593', maxWidth: '600px' }}>
         <h1
           style={{
@@ -59,7 +56,6 @@ export default function LandingPage() {
           <br />
           și monitorizarea burnout-ului
         </h2>
-
         <button
           onClick={() => navigate('/login')}
           style={{

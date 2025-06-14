@@ -34,7 +34,6 @@ export default function Login() {
       fontFamily: "'Poppins', sans-serif",
       padding: '2rem'
     }}>
-      {/* Logo + TEAMWELL în colțul din stânga-sus */}
       <div style={{
         position: 'absolute',
         top: '1.5rem',
@@ -48,7 +47,6 @@ export default function Login() {
           style={{ width: '250px', height: 'auto' }}
         />
       </div>
-
       <form onSubmit={handleLogin} style={{
         background: '#FFFFFF',
         borderRadius: '10px',
@@ -69,7 +67,6 @@ export default function Login() {
         }}>
           Autentificare
         </h2>
-
         <input
           type="email"
           placeholder="Email"
@@ -87,7 +84,6 @@ export default function Login() {
           onFocus={e => (e.currentTarget.style.borderColor = '#283593')}
           onBlur={e => (e.currentTarget.style.borderColor = '#DDD')}
         />
-
         <input
           type="password"
           placeholder="Parolă"
@@ -105,13 +101,11 @@ export default function Login() {
           onFocus={e => (e.currentTarget.style.borderColor = '#283593')}
           onBlur={e => (e.currentTarget.style.borderColor = '#DDD')}
         />
-
         {error && (
           <p style={{ color: '#E53935', textAlign: 'center', margin: 0 }}>
             {error}
           </p>
         )}
-
         <button
           type="submit"
           style={{
@@ -136,7 +130,6 @@ export default function Login() {
         >
           Intră în cont
         </button>
-
         <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
           <span style={{ fontSize: '0.9rem', color: '#555' }}>
             Nu ai cont?{' '}
@@ -145,8 +138,6 @@ export default function Login() {
             </Link>
           </span>
         </div>
-
-        {/* Buton de revenire la Homepage */}
         <div style={{ textAlign: 'center', marginTop: '1rem' }}>
           <Link
             to="/"

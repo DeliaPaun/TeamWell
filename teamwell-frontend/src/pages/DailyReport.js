@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import API                from '../api';
+import API from '../api';
 
-export default function PerformanceForm() {
+export default function DailyReport() {
   const navigate = useNavigate();
   const [tasks, setTasks]     = useState('');
   const [hours, setHours]     = useState('');
@@ -14,7 +14,15 @@ export default function PerformanceForm() {
     setError(null);
     setSuccess(null);
 
-    if (tasks < 0 || hours < 0 || hours > 24) {
+    const tasksNum = Number(tasks);
+    const hoursNum = Number(hours);
+
+    if (tasks === '' || hours === '') {
+    setError('Completează toate câmpurile.');
+    return;
+    }
+
+    if (tasksNum < 0 || hoursNum < 0 || hoursNum > 24) {
       setError('Valori invalide: ore între 0 și 24, sarcini ≥ 0.');
       return;
     }
@@ -24,8 +32,8 @@ export default function PerformanceForm() {
       await API.post('/activities', {
         userId:         user.id,
         date:           new Date().toISOString().slice(0,10),
-        tasksCompleted: Number(tasks),
-        hoursWorked:    Number(hours)
+        tasksCompleted: tasksNum,
+        hoursWorked:    hoursNum
       });
       setSuccess('Activitate salvată cu succes!');
       setTimeout(() => navigate('/questionnaires', { state: { successMsg: 'Activitate salvată!' } }), 800);
@@ -43,7 +51,6 @@ export default function PerformanceForm() {
       fontFamily: "'Poppins', sans-serif",
       padding: '2rem'
     }}>
-      {/* Logo + TEAMWELL */}
       <div style={{
         position: 'absolute', top: '1.5rem', left: '1.5rem',
         display: 'flex', alignItems: 'center'

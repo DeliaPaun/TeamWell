@@ -44,7 +44,7 @@ export default function Profile() {
         fontFamily: "'Poppins', sans-serif",
         color: '#ffffff'
       }}>
-        <p>Loading profile…</p>
+        <p>Se așteaptă profilul</p>
       </div>
     );
   }
@@ -59,7 +59,6 @@ export default function Profile() {
       padding: '2rem',
       fontFamily: "'Poppins', sans-serif"
     }}>
-      {/* Logo + TEAMWELL */}
       <div style={{
         position: 'absolute',
         top: '1.5rem',

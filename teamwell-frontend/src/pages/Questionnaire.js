@@ -56,7 +56,6 @@ export default function Questionnaire() {
       fontFamily: "'Poppins', sans-serif",
       padding: '2rem'
     }}>
-      {/* Logo + TEAMWELL */}
       <div style={{
         position: 'absolute',
         top: '1.5rem',
