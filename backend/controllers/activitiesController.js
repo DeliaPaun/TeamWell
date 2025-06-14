@@ -15,7 +15,7 @@ async function createActivity(req, res, next) {
       [userId, date, tasksCompleted, hoursWorked]
     );
     const activityId = actRes.rows[0].id;
-    const usedDate    = actRes.rows[0].date;
+    //const usedDate    = actRes.rows[0].date;
     
     const tmRes = await pool.query(
       `SELECT team_id
@@ -23,7 +23,7 @@ async function createActivity(req, res, next) {
         WHERE user_id = $1
         ORDER BY joined_at DESC
         LIMIT 1`,
-      [userId, usedDate]
+      [userId]
     );
     const teamId = tmRes.rows[0]?.team_id || null;
 
