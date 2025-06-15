@@ -34,7 +34,7 @@ export default function Questionnaire() {
       questionnaireId: Number(id),
       responses: Object.entries(answers).map(([qid, ans]) => ({
         questionId: Number(qid),
-        answer: ans
+        answer: ans === 'Da' ? 1 : ans === 'Nu' ? 0 : ans
       }))
     };
 

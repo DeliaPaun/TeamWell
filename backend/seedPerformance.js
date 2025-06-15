@@ -4,11 +4,11 @@ async function seedPerformanceQuestions() {
   try {
     await pool.query(`
       INSERT INTO questionnaires (title, version, created_at)
-      VALUES ('Performance Assessment', '1.0', NOW())
+      VALUES ('Chestionar Performanță', '1.0', NOW())
     `);
 
     const result = await pool.query(
-      `SELECT id FROM questionnaires WHERE title = 'Performance Assessment'`
+      `SELECT id FROM questionnaires WHERE title = 'Chestionar Performanță'`
     );
     const questionnaireId = result.rows[0].id;
 

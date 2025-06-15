@@ -40,7 +40,7 @@ router.get('/results', requireAuth, async (req, res) => {
 
     res.json(Object.values(byUser));
   } catch (err) {
-    console.error('Error fetching dynamic results:', err);
+    console.error('Eroare:', err);
     res.status(500).json({ message: 'Eroare la preluarea rezultatelor.' });
   }
 });

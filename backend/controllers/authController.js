@@ -19,17 +19,17 @@ exports.register = async (req, res) => {
   if (password.length !== 10) {
     return res
       .status(400)
-      .json({ message: 'Password must have 10 characters.' });
+      .json({ message: 'Parola trebuie să aibă 10 caractere.' });
   }
   if (!teamName) {
     return res
       .status(400)
-      .json({ message: 'teamName is required.' });
+      .json({ message: 'teamName este necesar.' });
   }
   if (await findUserByEmail(email)) {
     return res
       .status(400)
-      .json({ message: 'Email already in use.' });
+      .json({ message: 'Email deja folosit.' });
   }
 
   const hash = await bcrypt.hash(password, 10);
@@ -82,12 +82,12 @@ exports.login = async (req, res) => {
   try {
     const user = await findUserByEmail(email);
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Credențiale greșite.' });
     }
 
     const match = await bcrypt.compare(password, user.password_hash);
     if (!match) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Credențiale greșite.' });
     }
 
     const token = jwt.sign(
@@ -107,7 +107,7 @@ exports.login = async (req, res) => {
       }
     });
   } catch (err) {
-    console.error('[LOGIN] error:', err);
+    console.error('[LOGIN] eroare:', err);
     return res.status(500).json({ error: err.message });
   }
 };
