@@ -30,7 +30,7 @@ router.get('/embed/dashboard-token', auth, (req, res) => {
     return res.status(500).json({ message: 'Nu am putut genera token-ul.' });
   }
 
-  const embedUrl = `${mbUrl}/embed/dashboard/${dashboardId}?jwt=${token}`;
+  const embedUrl = `${mbUrl}/embed/dashboard/${dashboardId}#${token}`;
 
   res.json({ embedUrl });
 });
