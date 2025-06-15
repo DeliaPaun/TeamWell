@@ -1,11 +1,25 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: process.env.REACT_APP_API_URL });
-
-API.interceptors.request.use(config => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
+const API = axios.create({
+  baseURL: process.env.REACT_APP_API_URL,
 });
+
+API.interceptors.request.use(
+  config => {
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      try {
+        const { token } = JSON.parse(stored);
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+      } catch (e) {
+        console.error('Could not parse user from localStorage:', e);
+      }
+    }
+    return config;
+  },
+  err => Promise.reject(err)
+);
 
 export default API;
