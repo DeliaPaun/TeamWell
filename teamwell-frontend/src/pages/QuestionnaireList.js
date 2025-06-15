@@ -88,18 +88,17 @@ export default function QuestionnaireList() {
           {isManagerOrAdmin ? (
             <>
               {activeTab === 'dashboard' && (
-                isLoading ? (
+                isLoading ? 
                   <p>Se încarcă dashboard-ul…</p>
-                ) : embedUrl ? (
+                : embedUrl ? (
                 <iframe
                   title="Metabase Dashboard"
                   src={embedUrl}
                   style={{ width:'100%', height:'600px', border:'none', borderRadius:'8px' }}
                   allowFullScreen
                 />
-                ) : (
+                ) : 
                   <p>Eroare la încărcarea dashboard-ului.</p>
-                )
               )}
 
               {activeTab === 'questionnaires' && (
