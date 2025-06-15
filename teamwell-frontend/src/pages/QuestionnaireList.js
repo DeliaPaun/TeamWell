@@ -105,8 +105,12 @@ export default function QuestionnaireList() {
                 <iframe
                   title="Metabase Dashboard"
                   src={embedUrl}
-                  style={{ width:'100%', height:'600px', border:'none', borderRadius:'8px' }}
-                  allowFullScreen
+                  frameborder="0"
+                  width="800"
+                  height="600"
+                  //style={{ width:'100%', height:'600px', border:'none', borderRadius:'8px', frameborder: '0' }}
+                  //allowFullScreen
+                  allowtransparency 
                 />
                 )
               )}
