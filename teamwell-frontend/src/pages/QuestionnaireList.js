@@ -57,7 +57,6 @@ export default function QuestionnaireList() {
         <img src="/logo.svg" alt="TeamWell" style={{ width: '200px' }} />
       </div>
       <div style={containerStyle}>
-        {/* Header */}
         <div style={topBarStyle}>
           <h2 style={{ margin: 0, color: '#283593' }}>Welcome, {fullName}!</h2>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -66,7 +65,6 @@ export default function QuestionnaireList() {
           </div>
         </div>
 
-        {/* Tabs pentru manager/admin */}
         {isManagerOrAdmin && (
           <nav style={{ display: 'flex', borderBottom: '1px solid #eee' }}>
             {['dashboard','questionnaires','reports','users'].map(tab => (
@@ -86,7 +84,6 @@ export default function QuestionnaireList() {
 
           {isManagerOrAdmin ? (
             <>
-              {/* DASHBOARD EMBED */}
               {activeTab === 'dashboard' && embedUrl && (
                 <iframe
                   title="Metabase Dashboard"
@@ -96,7 +93,6 @@ export default function QuestionnaireList() {
                 />
               )}
 
-              {/* CHESTIONARE */}
               {activeTab === 'questionnaires' && (
                 <>
                   <h3 style={{ color: '#283593' }}>Chestionare disponibile</h3>
@@ -112,7 +108,6 @@ export default function QuestionnaireList() {
                 </>
               )}
 
-              {/* RAPOARTE */}
               {activeTab === 'reports' && (
                 <>
                   <h3 style={{ color: '#283593' }}>Rezultate chestionare angajați</h3>
@@ -134,7 +129,6 @@ export default function QuestionnaireList() {
                 </>
               )}
 
-              {/* USERS */}
               {activeTab === 'users' && (
                 <>
                   <h3 style={{ color: '#283593' }}>Utilizatori Activi</h3>
@@ -154,7 +148,6 @@ export default function QuestionnaireList() {
               )}
             </>
           ) : (
-            /* USER NORMAL */
             <>
               <button onClick={() => navigate('/activities')} style={primaryButtonStyle}>
                 Raportează activitate zilnică
@@ -177,7 +170,6 @@ export default function QuestionnaireList() {
   );
 }
 
-// — stiluri reuse —
 const wrapperStyle = {
   position: 'relative', minHeight: '100vh',
   background: 'linear-gradient(to bottom, #283593 0%, #ffffff 100%)',
