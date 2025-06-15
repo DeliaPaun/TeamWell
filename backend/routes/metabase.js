@@ -31,7 +31,7 @@ router.get('/embed/dashboard-token', auth, (req, res) => {
   }
 
   //const embedUrl = `${mbUrl}/embed/dashboard/${dashboardId}#${token}`;
-  const embedUrl = mbUrl + "embed/dashboard" + token + "#bordered=true&titled=true";
+  const embedUrl =`${mbUrl}/embed/dashboard/${dashboardId}?bordered=true&titled=true#${token}`;
 
   res.json({ embedUrl });
 });
