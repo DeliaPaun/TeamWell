@@ -4,15 +4,12 @@ import API from '../api';
 
 export default function QuestionnaireList() {
   const [questionnaires, setQuestionnaires] = useState([]);
-  const [results, setResults]               = useState([]);
-  const [user, setUser]                     = useState(null);
-  const [activeTab, setActiveTab]           = useState('dashboard');
-  const [embedUrl, setEmbedUrl]             = useState('');
-  const [isLoadingEmbed, setIsLoadingEmbed] = useState(false);
-  const [embedError, setEmbedError]         = useState('');
-  const navigate                            = useNavigate();
-  const location                            = useLocation();
-  const successMsg                          = location.state?.successMsg;
+  const [results, setResults] = useState([]);
+  const [user, setUser] = useState(null);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const successMsg = location.state?.successMsg;
 
   useEffect(() => {
     const raw = localStorage.getItem('user');
@@ -32,27 +29,6 @@ export default function QuestionnaireList() {
         .catch(err => console.error('Eroare la rezultate:', err));
     }
   }, [user]);
-
-  useEffect(() => {
-    if (user && ['manager','admin'].includes(user.role) && activeTab === 'dashboard') {
-      setIsLoadingEmbed(true);
-      setEmbedError('');
-      API.get('/embed/dashboard-token')
-        .then(res => {
-          console.log('Embed URL primit:', res.data.embedUrl);
-          setEmbedUrl(res.data.embedUrl);
-        })
-        .catch(err => {
-          console.error('Eroare la embed token:', err.response || err);
-          setEmbedUrl('');
-          setEmbedError(
-            err.response?.data?.message ||
-            'Eroare la încărcarea dashboard-ului.'
-          );
-        })
-        .finally(() => setIsLoadingEmbed(false));
-    }
-  }, [user, activeTab]);
 
   const handleLogout  = () => { localStorage.clear(); navigate('/login'); };
   const handleProfile = () => navigate('/profile');
@@ -95,24 +71,16 @@ export default function QuestionnaireList() {
           {successMsg && <div style={successMsgStyle}>{successMsg}</div>}
 
           {isManagerOrAdmin ? (
-            <>
+            <>  
               {activeTab === 'dashboard' && (
-                isLoadingEmbed ? (
-                  <p>Se încarcă dashboard-ul…</p>
-                ) : embedError ? (
-                  <p style={{ color: '#E53935' }}>{embedError}</p>
-                ) : (
                 <iframe
                   title="Metabase Dashboard"
                   src="https://metabase-production-1670.up.railway.app/public/dashboard/f62d4a0b-f5c7-46cf-8645-98efce443fdb"
-                  frameborder="0"
+                  frameBorder="0"
                   width="800"
                   height="600"
-                  //style={{ width:'100%', height:'600px', border:'none', borderRadius:'8px', frameborder: '0' }}
-                  //allowFullScreen
-                  allowtransparency 
+                  allowTransparency
                 />
-                )
               )}
 
               {activeTab === 'questionnaires' && (
