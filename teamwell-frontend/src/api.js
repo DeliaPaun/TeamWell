@@ -14,7 +14,7 @@ API.interceptors.request.use(
           config.headers.Authorization = `Bearer ${token}`;
         }
       } catch (e) {
-        console.error('Could not parse user from localStorage:', e);
+        console.error('Nu am putut parsa user-ul din localStorage:', e);
       }
     }
     return config;

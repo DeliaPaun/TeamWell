@@ -14,9 +14,16 @@ export default function Login() {
     try {
       const res = await API.post('/login', { email, password });
       const { token, user } = res.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('role', user.role);
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          ...user,
+          token
+        })
+      );
+      //localStorage.setItem('token', token);
+      //localStorage.setItem('user', JSON.stringify(user));
+      //localStorage.setItem('role', user.role);
       navigate('/questionnaires');
     } catch (err) {
       setError(err.response?.data?.message || 'Date invalide');
