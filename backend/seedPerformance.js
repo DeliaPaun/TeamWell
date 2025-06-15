@@ -2,15 +2,26 @@ const pool = require('./db');
 
 async function seedPerformanceQuestions() {
   try {
-    await pool.query(`
-      INSERT INTO questionnaires (title, version, created_at)
-      VALUES ('Chestionar Performanță', '1.0', NOW())
-    `);
-
-    const result = await pool.query(
+    let questionnaireId;
+    const qRes = await pool.query(
       `SELECT id FROM questionnaires WHERE title = 'Chestionar Performanță'`
     );
-    const questionnaireId = result.rows[0].id;
+
+    if (qRes.rowCount > 0) {
+      questionnaireId = qRes.rows[0].id;
+
+      await pool.query(
+        `DELETE FROM questions WHERE questionnaire_id = $1`,
+        [questionnaireId]
+      );
+    } else {
+      const insertRes = await pool.query(
+        `INSERT INTO questionnaires (title, version, created_at)
+         VALUES ('Chestionar Performanță', '1.0', NOW())
+         RETURNING id`
+      );
+      questionnaireId = insertRes.rows[0].id;
+    }
 
     const questions = [
       { text: 'Cât de clare îți sunt obiectivele de performanță la locul de muncă?', scale_type: 'scale_1_5' },
@@ -33,7 +44,7 @@ async function seedPerformanceQuestions() {
       );
     }
 
-    console.log('✅ Întrebările chestionarului de performanță au fost adăugate cu succes!');
+    console.log('✅ Întrebările pentru chestionarul de performanță au fost adăugate cu succes!');
     process.exit(0);
   } catch (err) {
     console.error('❌ Eroare la seedPerformanceQuestions:', err);

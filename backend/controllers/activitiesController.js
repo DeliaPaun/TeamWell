@@ -1,5 +1,70 @@
 const pool = require('../db');
 
+async function evaluateActivity(userId, activityId, date) {
+  const client = await pool.connect();
+  try {
+    const res = await client.query(
+      `SELECT tasks_completed, hours_worked
+         FROM activities
+        WHERE id = $1 AND user_id = $2`,
+      [activityId, userId]
+    );
+    if (res.rowCount === 0) return;
+
+    const { tasks_completed, hours_worked } = res.rows[0];
+    const productivity = hours_worked > 0 ? tasks_completed / hours_worked : 0;
+
+    const teamRes = await client.query(
+      `SELECT team_id FROM team_member
+        WHERE user_id = $1 ORDER BY joined_at DESC LIMIT 1`,
+      [userId]
+    );
+    const teamId = teamRes.rows[0]?.team_id || null;
+    if (!teamId) return;
+
+    if (tasks_completed === 0) {
+      await client.query(
+        `INSERT INTO alerts
+           (user_id, team_id, source_type, activity_id, alert_level, message)
+         VALUES ($1, $2, 'activity', $3, 'info', 'Nicio sarcină finalizată astăzi.')`,
+        [userId, teamId, activityId]
+      );
+    }
+
+    if (hours_worked < 2) {
+      await client.query(
+        `INSERT INTO alerts
+           (user_id, team_id, source_type, activity_id, alert_level, message)
+         VALUES ($1, $2, 'activity', $3, 'warning', $4)`,
+        [userId, teamId, activityId, `Număr redus de ore lucrate: ${hours_worked}`]
+      );
+    }
+
+    if (hours_worked > 12) {
+      await client.query(
+        `INSERT INTO alerts
+           (user_id, team_id, source_type, activity_id, alert_level, message)
+         VALUES ($1, $2, 'activity', $3, 'warning', $4)`,
+        [userId, teamId, activityId, `Număr excesiv de ore lucrate: ${hours_worked}`]
+      );
+    }
+
+    if (productivity < 0.5) {
+      await client.query(
+        `INSERT INTO alerts
+           (user_id, team_id, source_type, activity_id, alert_level, message)
+         VALUES ($1, $2, 'activity', $3, 'warning', $4)`,
+        [userId, teamId, activityId, `Productivitate scăzută: ${productivity.toFixed(2)}`]
+      );
+    }
+
+  } catch (err) {
+    console.error('evaluateActivity error:', err);
+  } finally {
+    client.release();
+  }
+}
+
 async function createActivity(req, res, next) {
   try {
     const { userId, date, tasksCompleted, hoursWorked } = req.body;
@@ -14,38 +79,13 @@ async function createActivity(req, res, next) {
        RETURNING id, date`,
       [userId, date, tasksCompleted, hoursWorked]
     );
+
     const activityId = actRes.rows[0].id;
-    //const usedDate    = actRes.rows[0].date;
-    
-    const tmRes = await pool.query(
-      `SELECT team_id
-         FROM team_member
-        WHERE user_id = $1
-        ORDER BY joined_at DESC
-        LIMIT 1`,
-      [userId]
-    );
-    const teamId = tmRes.rows[0]?.team_id || null;
+    const usedDate   = actRes.rows[0].date;
 
-    if (tasksCompleted === 0 && teamId) {
-      await pool.query(
-        `INSERT INTO alerts
-           (user_id, team_id, source_type, burnout_id, activity_id, alert_level, message)
-         VALUES ($1, $2, 'activity', NULL, $3, 'info', $4, 'Nicio sarcină finalizată astăzi.')`,
-        [userId, teamId, activityId]
-      );
-    }
+    await evaluateActivity(userId, activityId, usedDate);
 
-    if (hoursWorked < 2 && teamId) {
-      await pool.query(
-        `INSERT INTO alerts
-           (user_id, team_id, source_type, burnout_id, activity_id, alert_level, message)
-         VALUES ($1, $2, 'activity', NULL, $3, 'warning', $4)`,
-        [userId, teamId, activityId, `Număr redus de ore lucrate: ${hoursWorked}`]
-      );
-    }
-
-    res.status(201).json({ message: 'Activity successfully logged.' });
+    res.status(201).json({ message: 'Activitate înregistrată cu succes.' });
   } catch (err) {
     next(err);
   }

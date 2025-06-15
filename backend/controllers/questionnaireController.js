@@ -57,10 +57,6 @@ async function submitResponses(req, res, next) {
     const maxScore = questionCount * 5;
     const pct = maxScore > 0 ? (totalScore / maxScore) * 100 : 0;
 
-    let riskLevel = 'low';
-    if (pct >= 80)      riskLevel = 'high';
-    else if (pct >= 50) riskLevel = 'medium';
-
     const tmRes = await client.query(
       `SELECT team_id
          FROM team_member
@@ -71,32 +67,71 @@ async function submitResponses(req, res, next) {
     );
     const teamId = tmRes.rows[0]?.team_id || null;
 
-    const bsRes = await client.query(
-      `INSERT INTO burnout_scores
-         (user_id, team_id, questionnaire_id, date, score, risk_level, created_at)
-       VALUES ($1, $2, $3, CURRENT_DATE, $4, $5, NOW())
-       RETURNING id`,
-      [userId, teamId, questionnaireId, totalScore, riskLevel]
+    const typeRes = await client.query(
+      `SELECT title FROM questionnaires WHERE id = $1`,
+      [questionnaireId]
     );
-    const burnoutId = bsRes.rows[0].id;
+    const title = typeRes.rows[0]?.title || '';
 
-    if ((riskLevel === 'medium' || riskLevel === 'high') && teamId) {
-      const alertLevel = riskLevel === 'high' ? 'critical' : 'warning';
-      const message =
-        riskLevel === 'high'
+    if (title.toLowerCase().includes('burnout')) {
+      let riskLevel = 'low';
+      if (pct >= 80)      riskLevel = 'high';
+      else if (pct >= 50) riskLevel = 'medium';
+
+      const bsRes = await client.query(
+        `INSERT INTO burnout_scores
+           (user_id, team_id, questionnaire_id, date, score, risk_level, created_at)
+         VALUES ($1, $2, $3, CURRENT_DATE, $4, $5, NOW())
+         RETURNING id`,
+        [userId, teamId, questionnaireId, totalScore, riskLevel]
+      );
+      const burnoutId = bsRes.rows[0].id;
+
+      if ((riskLevel === 'medium' || riskLevel === 'high') && teamId) {
+        const alertLevel = riskLevel === 'high' ? 'critical' : 'warning';
+        const message = riskLevel === 'high'
           ? `Scor burnout critic: ${totalScore} (${pct.toFixed(1)}%)`
           : `Scor burnout ridicat: ${totalScore} (${pct.toFixed(1)}%)`;
 
-      await client.query(
-        `INSERT INTO alerts
-           (user_id, team_id, source_type, burnout_id, activity_id, alert_level, message)
-         VALUES ($1, $2, 'burnout', $3, NULL, $4, $5)`,
-        [userId, teamId, burnoutId, alertLevel, message]
+        await client.query(
+          `INSERT INTO alerts
+             (user_id, team_id, source_type, burnout_id, activity_id, alert_level, message)
+           VALUES ($1, $2, 'burnout', $3, NULL, $4, $5)`,
+          [userId, teamId, burnoutId, alertLevel, message]
+        );
+      }
+
+    } else if (title.toLowerCase().includes('performan')) {
+      let performanceLevel = 'low';
+      if (pct >= 80)      performanceLevel = 'high';
+      else if (pct >= 50) performanceLevel = 'medium';
+
+      const psRes = await client.query(
+        `INSERT INTO performance_scores
+           (user_id, team_id, questionnaire_id, date, score, performance_level, created_at)
+         VALUES ($1, $2, $3, CURRENT_DATE, $4, $5, NOW())
+         RETURNING id`,
+        [userId, teamId, questionnaireId, totalScore, performanceLevel]
       );
+      const performanceId = psRes.rows[0].id;
+
+      if ((performanceLevel === 'low' || performanceLevel === 'medium') && teamId) {
+        const alertLevel = performanceLevel === 'low' ? 'warning' : 'info';
+        const message = performanceLevel === 'low'
+          ? `Nivel scăzut de performanță: ${pct.toFixed(1)}%`
+          : `Nivel mediu de performanță: ${pct.toFixed(1)}%`;
+
+        await client.query(
+          `INSERT INTO alerts
+            (user_id, team_id, source_type, performance_id, alert_level, message)
+          VALUES ($1, $2, 'performance', $3, $4, $5)`,
+          [userId, teamId, performanceId, alertLevel, message]
+        );
+      }
     }
 
     await client.query('COMMIT');
-    res.json({ message: 'Răspunsuri și scor de burnout salvate cu succes.' });
+    res.json({ message: 'Răspunsuri salvate cu succes și scor calculat.' });
 
   } catch (err) {
     await client.query('ROLLBACK');
