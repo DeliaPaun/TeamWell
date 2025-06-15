@@ -14,19 +14,20 @@ export default function Login() {
     try {
       const res = await API.post('/login', { email, password });
       console.log('LOGIN response:', res);
-      //const { token, user } = res.data;
+      const { token, user } = res.data;
       localStorage.setItem(
         'user',
         JSON.stringify({
-          //...user,
-          //token
+          ...user,
+          token
         })
       );
       //localStorage.setItem('token', token);
       //localStorage.setItem('user', JSON.stringify(user));
       //localStorage.setItem('role', user.role);
-      navigate('/questionnaires');
+      navigate('/questionnaires', { replace: true});
     } catch (err) {
+      console.error('Login error:', err.response ?? err);
       setError(err.response?.data?.message || 'Date invalide');
     }
   };
