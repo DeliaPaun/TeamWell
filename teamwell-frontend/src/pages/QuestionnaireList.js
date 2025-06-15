@@ -119,7 +119,7 @@ export default function QuestionnaireList() {
                 />
               )}
 
-              {activeTab === 'Chestionare' && (
+              {activeTab === 'questionnaires' && (
                 <>
                   <h3 style={{ color: '#283593' }}>Chestionare disponibile</h3>
                   <ul style={listGridStyle}>
@@ -134,7 +134,7 @@ export default function QuestionnaireList() {
                 </>
               )}
 
-              {activeTab === 'Rapoarte' && (
+              {activeTab === 'reports' && (
                 <>
                   <h3 style={{ color: '#283593' }}>Rezultate chestionare angajați</h3>
                   {results.length === 0
@@ -155,7 +155,7 @@ export default function QuestionnaireList() {
                 </>
               )}
 
-              {activeTab === 'Useri' && (
+              {activeTab === 'users' && (
                 <>
                   <h3 style={{ color: '#283593' }}>Utilizatori Activi</h3>
                   {activeUsers.length === 0
