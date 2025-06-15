@@ -24,11 +24,13 @@ async function submitResponses(req, res, next) {
 
     for (const r of responses) {
       const isText = typeof r.answer === 'string' && isNaN(r.answer);
+      const answerValue = isText ? null : Number(r.answer);
+      const answerText  = isText ? r.answer : nul
       await client.query(
         `INSERT INTO responses
            (user_id, questionnaire_id, question_id, answer_value, answered_at)
          VALUES ($1, $2, $3, $4, NOW())`,
-        [userId, questionnaireId, r.questionId, isText ? null : Number(r.answer)]
+        [userId, questionnaireId, r.questionId, answerValue, answerText]
       );
     }
 
