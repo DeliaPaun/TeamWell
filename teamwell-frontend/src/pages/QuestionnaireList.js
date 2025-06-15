@@ -39,11 +39,11 @@ export default function QuestionnaireList() {
       setEmbedError('');
       API.get('/embed/dashboard-token')
         .then(res => {
-          console.log('✅ Embed token response:', res.data);
+          console.log('Embed URL primit:', res.data.embedUrl);
           setEmbedUrl(res.data.embedUrl);
         })
         .catch(err => {
-          console.error('❌ Eroare la embed token:', err.response || err);
+          console.error('Eroare la embed token:', err.response || err);
           setEmbedUrl('');
           setEmbedError(
             err.response?.data?.message ||
