@@ -13,12 +13,13 @@ export default function Login() {
     setError('');
     try {
       const res = await API.post('/login', { email, password });
-      const { token, user } = res.data;
+      console.log('LOGIN response:', res);
+      //const { token, user } = res.data;
       localStorage.setItem(
         'user',
         JSON.stringify({
-          ...user,
-          token
+          //...user,
+          //token
         })
       );
       //localStorage.setItem('token', token);
