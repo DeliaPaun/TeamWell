@@ -8,14 +8,15 @@ export default function QuestionnaireList() {
   const [user, setUser]                     = useState(null);
   const [activeTab, setActiveTab]           = useState('dashboard');
   const [embedUrl, setEmbedUrl]             = useState('');
-  const [isLoading, setIsLoading]           = useState(false);
+  const [isLoadingEmbed, setIsLoadingEmbed] = useState(false);
+  const [embedError, setEmbedError]         = useState('');
   const navigate                            = useNavigate();
   const location                            = useLocation();
   const successMsg                          = location.state?.successMsg;
 
   useEffect(() => {
-    const stored = localStorage.getItem('user');
-    if (stored) setUser(JSON.parse(stored));
+    const raw = localStorage.getItem('user');
+    if (raw) setUser(JSON.parse(raw));
   }, []);
 
   useEffect(() => {
@@ -25,23 +26,31 @@ export default function QuestionnaireList() {
   }, []);
 
   useEffect(() => {
-    if (user?.role === 'manager' || user?.role === 'admin') {
+    if (user && ['manager','admin'].includes(user.role)) {
       API.get('/questionnaires/results')
         .then(res => setResults(res.data))
-        .catch(err => console.error('Eroare la returnarea rezultatelor:', err));
+        .catch(err => console.error('Eroare la rezultate:', err));
     }
   }, [user]);
 
   useEffect(() => {
-    if ((user?.role === 'manager' || user?.role === 'admin') && activeTab === 'dashboard') {
-      setIsLoading(true);
+    if (user && ['manager','admin'].includes(user.role) && activeTab === 'dashboard') {
+      setIsLoadingEmbed(true);
+      setEmbedError('');
       API.get('/embed/dashboard-token')
-        .then(res => setEmbedUrl(res.data.embedUrl))
-        .catch(err => {
-          console.error('Eroare la embed token:', err);
-          setEmbedUrl('');
+        .then(res => {
+          console.log('✅ Embed token response:', res.data);
+          setEmbedUrl(res.data.embedUrl);
         })
-        .finally(() => setIsLoading(false));
+        .catch(err => {
+          console.error('❌ Eroare la embed token:', err.response || err);
+          setEmbedUrl('');
+          setEmbedError(
+            err.response?.data?.message ||
+            'Eroare la încărcarea dashboard-ului.'
+          );
+        })
+        .finally(() => setIsLoadingEmbed(false));
     }
   }, [user, activeTab]);
 
@@ -88,17 +97,18 @@ export default function QuestionnaireList() {
           {isManagerOrAdmin ? (
             <>
               {activeTab === 'dashboard' && (
-                isLoading ? 
+                isLoadingEmbed ? (
                   <p>Se încarcă dashboard-ul…</p>
-                : embedUrl ? (
+                ) : embedError ? (
+                  <p style={{ color: '#E53935' }}>{embedError}</p>
+                ) : (
                 <iframe
                   title="Metabase Dashboard"
                   src={embedUrl}
                   style={{ width:'100%', height:'600px', border:'none', borderRadius:'8px' }}
                   allowFullScreen
                 />
-                ) : 
-                  <p>Eroare la încărcarea dashboard-ului.</p>
+                )
               )}
 
               {activeTab === 'questionnaires' && (

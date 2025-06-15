@@ -6,16 +6,21 @@ const API = axios.create({
 
 API.interceptors.request.use(
   config => {
-    const stored = localStorage.getItem('user');
-    if (stored) {
+    const rawUser = localStorage.getItem('user');
+    if (rawUser) {
       try {
-        const { token } = JSON.parse(stored);
+        const { token } = JSON.parse(rawUser);
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
+          return config;
         }
       } catch (e) {
-        console.error('Nu am putut parsa user-ul din localStorage:', e);
+        console.error('api.js: nu am putut parsa user din localStorage', e);
       }
+    }
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
