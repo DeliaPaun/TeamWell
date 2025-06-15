@@ -104,7 +104,7 @@ export default function QuestionnaireList() {
                 ) : (
                 <iframe
                   title="Metabase Dashboard"
-                  src={embedUrl}
+                  src="https://metabase-production-1670.up.railway.app/public/dashboard/f62d4a0b-f5c7-46cf-8645-98efce443fdb"
                   frameborder="0"
                   width="800"
                   height="600"
