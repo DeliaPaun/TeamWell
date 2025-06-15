@@ -28,8 +28,8 @@ async function submitResponses(req, res, next) {
       const answerText  = isText ? r.answer : null;
       await client.query(
         `INSERT INTO responses
-           (user_id, questionnaire_id, question_id, answer_value, answered_at)
-         VALUES ($1, $2, $3, $4, NOW())`,
+           (user_id, questionnaire_id, question_id, answer_value, answer_text, answered_at)
+         VALUES ($1, $2, $3, $4, $5, NOW())`,
         [userId, questionnaireId, r.questionId, answerValue, answerText]
       );
     }
