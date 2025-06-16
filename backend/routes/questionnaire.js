@@ -38,18 +38,31 @@ router.get('/results', async (req, res) => {
         json_agg(
           json_build_object(
             'questionnaire', q.title,
-            'score',         bs.score,
-            'risk_level',    bs.risk_level,
-            'date',          to_char(bs.date, 'YYYY-MM-DD')
+            'score',         s.score,
+            'risk_level',    s.risk_level,
+            'performance_level', s.performance_level,
+            'date',          to_char(s.date, 'YYYY-MM-DD')
           )
-          ORDER BY bs.date DESC
+          ORDER BY s.date DESC
         ) AS results
-      FROM burnout_scores bs
-      JOIN users u ON u.id = bs.user_id
-      JOIN questionnaires q ON q.id = bs.questionnaire_id
-      GROUP BY u.id, u.first_name, u.last_name
-      ORDER BY u.last_name, u.first_name
+      FROM users u
+
+      LEFT JOIN (
+        SELECT user_id, questionnaire_id, score, risk_level, NULL::text AS performance_level, date
+        FROM burnout_scores
+        UNION ALL
+        SELECT user_id, questionnaire_id, score, NULL::text AS risk_level, performance_level, date
+        FROM performance_scores
+      ) AS s
+        ON s.user_id = u.id
+
+      LEFT JOIN questionnaires q
+        ON q.id = s.questionnaire_id
+
+      GROUP BY u.id, name
+      ORDER BY u.last_name, u.first_name;
     `);
+
     res.json(result.rows);
   } catch (err) {
     console.error('Eroare la obținerea rezultatelor:', err);
