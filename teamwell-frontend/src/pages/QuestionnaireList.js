@@ -71,7 +71,7 @@ export default function QuestionnaireList() {
           {successMsg && <div style={successMsgStyle}>{successMsg}</div>}
 
           {isManagerOrAdmin ? (
-            <>  
+            <>
               {activeTab === 'dashboard' && (
                 <iframe
                   title="Metabase Dashboard"
@@ -107,11 +107,16 @@ export default function QuestionnaireList() {
                         <div key={emp.user_id} style={resultCardStyle}>
                           <h4 style={{ margin:'0 0 .5rem', color:'#283593' }}>{emp.name}</h4>
                           <ul style={{ paddingLeft:'1.25rem' }}>
-                            {emp.results.map((r,i) => (
-                              <li key={i} style={{ color:'#555', marginBottom:'0.25rem' }}>
-                                <strong>{r.questionnaire}</strong> – Score: {r.score}, Risk: {r.risk_level}, Date: {r.date}
-                              </li>
-                            ))}
+                            {emp.results.map((r,i) => {
+                              const levelLabel = r.risk_level
+                                ? `Risk: ${r.risk_level}`
+                                : `Performance: ${r.performance_level}`;
+                              return (
+                                <li key={i} style={{ color:'#555', marginBottom:'0.25rem' }}>
+                                  <strong>{r.questionnaire}</strong> – Score: {r.score}, {levelLabel}, Date: {r.date}
+                                </li>
+                              );
+                            })}
                           </ul>
                         </div>
                       ))
