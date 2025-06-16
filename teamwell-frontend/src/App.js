@@ -5,7 +5,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import QuestionnaireList from './pages/QuestionnaireList';
 import Questionnaire from './pages/Questionnaire';
-import Dashboard from './pages/Dashboard';
+//import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/protectedRoute';
 import Logout from './pages/Logout';
 import DailyReport from './pages/DailyReport';
@@ -40,14 +40,6 @@ function App() {
           element={
             <ProtectedRoute>
               <DailyReport />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
             </ProtectedRoute>
           }
         />
