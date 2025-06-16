@@ -77,7 +77,7 @@ export default function QuestionnaireList() {
                   title="Metabase Dashboard"
                   src="https://metabase-production-1670.up.railway.app/public/dashboard/f62d4a0b-f5c7-46cf-8645-98efce443fdb"
                   width="100%"
-                  height="100%"
+                  height="650"
                   border='none'
                   allowTransparency
                   allowFullScreen
