@@ -82,6 +82,7 @@ export default function QuestionnaireList() {
                     border: 'none',
                   }}
                   allowTransparency
+                  allowFullScreen
                 />
               )}
 
