@@ -76,8 +76,13 @@ export default function QuestionnaireList() {
                 <iframe
                   title="Metabase Dashboard"
                   src="https://metabase-production-1670.up.railway.app/public/dashboard/f62d4a0b-f5c7-46cf-8645-98efce443fdb"
-                  width="800"
-                  height="600"
+                  style={{
+                    position: 'absolute',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    width: '100%',
+                    height: '100%',
+                    border: 'none',
+                  }}
                   allowTransparency
                   allowFullScreen
                 />
