@@ -108,7 +108,7 @@ export default function QuestionnaireList() {
       } catch (err) {
         console.error('Eroare la fetch /alerts:', err);
       }
-    }, 5_000);
+    }, 10_000);
 
     return () => clearInterval(iv);
   }, [user, lastAlertTs]);
