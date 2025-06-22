@@ -10,10 +10,10 @@ async function submitResponses(req, res, next) {
 
     const check = await client.query(
       `SELECT 1 FROM responses
-        WHERE user_id = $1
-          AND questionnaire_id = $2
-          AND DATE(answered_at) = CURRENT_DATE
-        LIMIT 1`,
+         WHERE user_id = $1
+           AND questionnaire_id = $2
+           AND DATE(answered_at) = CURRENT_DATE
+         LIMIT 1`,
       [userId, questionnaireId]
     );
 
@@ -55,7 +55,9 @@ async function submitResponses(req, res, next) {
     );
     const questionCount = parseInt(qcRes.rows[0].cnt, 10);
     const maxScore = questionCount * 5;
+
     const pct = maxScore > 0 ? (totalScore / maxScore) * 100 : 0;
+    const riskPct = 100 - pct;
 
     const tmRes = await client.query(
       `SELECT team_id
@@ -75,15 +77,15 @@ async function submitResponses(req, res, next) {
 
     if (title.toLowerCase().includes('burnout')) {
       let riskLevel = 'low';
-      if (pct >= 80)      riskLevel = 'high';
-      else if (pct >= 50) riskLevel = 'medium';
+      if (riskPct >= 80)      riskLevel = 'high';
+      else if (riskPct >= 50) riskLevel = 'medium';
 
       const bsRes = await client.query(
         `INSERT INTO burnout_scores
            (user_id, team_id, questionnaire_id, date, score, risk_level, created_at)
          VALUES ($1, $2, $3, CURRENT_DATE, $4, $5, NOW())
          RETURNING id`,
-        [userId, teamId, questionnaireId, totalScore, riskLevel]
+        [userId, teamId, questionnaireId, riskPct, riskLevel]
       );
       const burnoutId = bsRes.rows[0].id;
 
@@ -111,7 +113,7 @@ async function submitResponses(req, res, next) {
            (user_id, team_id, questionnaire_id, date, score, performance_level, created_at)
          VALUES ($1, $2, $3, CURRENT_DATE, $4, $5, NOW())
          RETURNING id`,
-        [userId, teamId, questionnaireId, totalScore, performanceLevel]
+        [userId, teamId, questionnaireId, pct, performanceLevel]
       );
       const performanceId = psRes.rows[0].id;
 
@@ -137,6 +139,7 @@ async function submitResponses(req, res, next) {
     await client.query('ROLLBACK');
     console.error('submitResponses error:', err);
     next(err);
+
   } finally {
     client.release();
   }
