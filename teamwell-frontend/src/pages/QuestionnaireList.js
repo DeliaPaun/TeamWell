@@ -11,6 +11,30 @@ export default function QuestionnaireList() {
   const location = useLocation();
   const successMsg = location.state?.successMsg;
 
+  const dashboards = [
+    {
+      id: 'overview',
+      title: 'Overview',
+      url: 'https://metabase…/public/dashboard/f62d4a0b-f5c7-46cf-8645-98efce443fdb'
+    },
+    {
+      id: 'performance',
+      title: 'Performance Insights',
+      url: 'https://metabase…/public/dashboard/<PERFORMANCE_UUID>'
+    },
+    {
+      id: 'burnout',
+      title: 'Burnout & Well-being',
+      url: 'https://metabase…/public/dashboard/<BURNOUT_UUID>'
+    },
+    {
+      id: 'activity',
+      title: 'Activity & Alerts',
+      url: 'https://metabase…/public/dashboard/<ACTIVITY_UUID>'
+    }
+  ];
+  const [selectedDash, setSelectedDash] = useState(dashboards[0]);
+
   useEffect(() => {
     const raw = localStorage.getItem('user');
     if (raw) setUser(JSON.parse(raw));
@@ -73,15 +97,35 @@ export default function QuestionnaireList() {
           {isManagerOrAdmin ? (
             <>
               {activeTab === 'dashboard' && (
-                <iframe
-                  title="Metabase Dashboard"
-                  src="https://metabase-production-1670.up.railway.app/public/dashboard/f62d4a0b-f5c7-46cf-8645-98efce443fdb"
-                  width="100%"
-                  height="650"
-                  border='none'
-                  allowTransparency
-                  allowFullScreen
-                />
+                <>
+                  <div style={{ marginBottom: '1rem', display: 'flex', gap: '0.5rem' }}>
+                    {dashboards.map(d => (
+                      <button
+                        key={d.id}
+                        onClick={() => setSelectedDash(d)}
+                        style={{
+                          padding: '0.5rem 1rem',
+                          borderRadius: '6px',
+                          border: selectedDash.id === d.id ? '2px solid #0288D1' : '1px solid #ccc',
+                          background: selectedDash.id === d.id ? '#E3F2FD' : '#fff',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {d.title}
+                      </button>
+                    ))}
+                  </div>
+                  <iframe
+                    key={selectedDash.id}
+                    title={selectedDash.title}
+                    src={selectedDash.url}
+                    width="100%"
+                    height="650"
+                    style={{ border: 'none' }}
+                    allowTransparency
+                    allowFullScreen
+                  />
+                </>
               )}
 
               {activeTab === 'questionnaires' && (
