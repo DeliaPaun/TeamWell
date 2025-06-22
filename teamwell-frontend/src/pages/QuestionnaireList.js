@@ -5,6 +5,7 @@ import API from '../api';
 export default function QuestionnaireList() {
   const [questionnaires, setQuestionnaires] = useState([]);
   const [results, setResults] = useState([]);
+  const [users, setUsers] = useState([]); 
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const navigate = useNavigate();
@@ -35,6 +36,21 @@ export default function QuestionnaireList() {
   ];
   const [selectedDash, setSelectedDash] = useState(dashboards[0]);
 
+   const usersById = React.useMemo(() => {
+    return users.reduce((acc, u) => {
+      acc[u.id] = u.role;
+      return acc;
+    }, {});
+  }, [users]);
+
+  const employeeResults = React.useMemo(() => {
+    return results.filter(emp => usersById[emp.user_id] === 'employee');
+  }, [results, usersById]);
+
+  const activeUsers = React.useMemo(() => {
+    return employeeResults.filter(emp => emp.results.length > 0);
+  }, [employeeResults]);
+
   useEffect(() => {
     const raw = localStorage.getItem('user');
     if (raw) setUser(JSON.parse(raw));
@@ -54,14 +70,24 @@ export default function QuestionnaireList() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (user && ['manager','admin'].includes(user.role)) {
+      API.get('/users')
+        .then(res => setUsers(res.data))
+        .catch(err => console.error('Eroare la users:', err));
+    }
+  }, [user]);
+
   const handleLogout  = () => { localStorage.clear(); navigate('/login'); };
   const handleProfile = () => navigate('/profile');
-
   if (!user) return null;
+
   const { first_name, last_name, role } = user;
   const fullName = `${first_name} ${last_name}`.trim();
   const isManagerOrAdmin = role === 'manager' || role === 'admin';
-  const activeUsers = results.filter(emp => emp.results.length > 0);
+
+  //const employeeResults = results.filter(emp => usersById[emp.user_id] === 'employee');
+  //const activeUsers = employeeResults.filter(emp => emp.results.length > 0);
 
   return (
     <div style={wrapperStyle}>
