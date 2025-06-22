@@ -46,7 +46,7 @@ export default function QuestionnaireList() {
   const employeeResults = React.useMemo(() => {
     if (!users.length) return results;
     return results.filter(emp => (usersById[emp.user_id] || '') === 'employee');
-  }, [results, usersById]);
+  }, [results, usersById, users.length]);
 
   const activeUsers = React.useMemo(() => {
     return employeeResults.filter(emp => emp.results.length > 0);
