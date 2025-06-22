@@ -8,7 +8,8 @@ const questionnaireRoutes = require('./routes/questionnaire');
 const resultsRoutes = require('./routes/results');
 const activitiesRouter = require('./routes/activities');
 const usersRouter = require('./routes/users');
-const metabaseRt   = require('./routes/metabase');
+const alertsRouter = require('./routes/alerts');
+//const metabaseRt   = require('./routes/metabase');
 
 const app = express();
 
@@ -23,7 +24,9 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/questionnaires', questionnaireRoutes);
 app.use('/api/questionnaires', resultsRoutes);
 app.use('/api/activities', activitiesRouter);
-app.use('/api', metabaseRt);
+app.use('/api/alerts', alertsRouter);
+//app.use('/api', metabaseRt);
+
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not Found' });
