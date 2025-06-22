@@ -172,9 +172,9 @@ export default function QuestionnaireList() {
               {activeTab === 'reports' && (
                 <>
                   <h3 style={{ color: '#283593' }}>Rezultate chestionare angajați</h3>
-                  {results.length === 0
+                  {employeeResults.length === 0
                     ? <p style={{ color:'#555' }}>Niciun rezultat încă.</p>
-                    : results.map(emp => (
+                    : employeeResults.map(emp => (
                         <div key={emp.user_id} style={resultCardStyle}>
                           <h4 style={{ margin:'0 0 .5rem', color:'#283593' }}>{emp.name}</h4>
                           <ul style={{ paddingLeft:'1.25rem' }}>
