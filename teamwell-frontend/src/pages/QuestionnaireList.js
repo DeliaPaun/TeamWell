@@ -93,7 +93,7 @@ export default function QuestionnaireList() {
         newOnes.forEach(a => {
           toast.info(`[${a.alert_level.toUpperCase()}] ${a.message}`, {
             position: 'top-right',
-            autoClose: 8000,
+            autoClose: 10000,
           });
           if (window.Notification?.permission === 'granted') {
             new Notification('TeamWell Alert', {
@@ -108,7 +108,7 @@ export default function QuestionnaireList() {
       } catch (err) {
         console.error('Eroare la fetch /alerts:', err);
       }
-    }, 60_000);
+    }, 5_000);
 
     return () => clearInterval(iv);
   }, [user, lastAlertTs]);
