@@ -20,17 +20,17 @@ export default function QuestionnaireList() {
     {
       id: 'performance',
       title: 'Performance Insights',
-      url: 'https://metabase-production-1670.up.railway.app/public/dashboard/<PERFORMANCE_UUID>'
+      url: 'https://metabase-production-1670.up.railway.app/public/dashboard/0a4ac5df-9e49-4c6e-b585-be658808d6ad'
     },
     {
       id: 'burnout',
       title: 'Burnout & Well-being',
-      url: 'https://metabase-production-1670.up.railway.app/public/dashboard/<BURNOUT_UUID>'
+      url: 'https://metabase-production-1670.up.railway.app/public/dashboard/c16f9762-bd23-4739-9975-8d58492e9080'
     },
     {
       id: 'activity',
       title: 'Activity & Alerts',
-      url: 'https://metabase-production-1670.up.railway.app/public/dashboard/<ACTIVITY_UUID>'
+      url: 'https://metabase-production-1670.up.railway.app/public/dashboard/8ee6b306-4cdf-4cfc-8876-e3b410a77966'
     }
   ];
   const [selectedDash, setSelectedDash] = useState(dashboards[0]);
