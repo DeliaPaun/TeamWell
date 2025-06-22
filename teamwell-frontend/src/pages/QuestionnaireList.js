@@ -37,10 +37,10 @@ export default function QuestionnaireList() {
   const [selectedDash, setSelectedDash] = useState(dashboards[0]);
 
   const employeeIds = React.useMemo(() => {
-    return users
-      .filter(u => (u.role || '').toLowerCase() === 'employee')
-      .map(u => u.id);
-  }, [users]);
+  return users
+    .filter(u => typeof u.role === 'string' && u.role.toLowerCase() === 'employee')
+    .map(u => u.id);
+}, [users]);
 
   const employeeResults = React.useMemo(() => {
     return results.filter(r => employeeIds.includes(r.user_id));
