@@ -15,22 +15,22 @@ export default function QuestionnaireList() {
     {
       id: 'overview',
       title: 'Overview',
-      url: 'https://metabase…/public/dashboard/f62d4a0b-f5c7-46cf-8645-98efce443fdb'
+      url: 'https://metabase-production-1670.up.railway.app/public/dashboard/f62d4a0b-f5c7-46cf-8645-98efce443fdb'
     },
     {
       id: 'performance',
       title: 'Performance Insights',
-      url: 'https://metabase…/public/dashboard/<PERFORMANCE_UUID>'
+      url: 'https://metabase-production-1670.up.railway.app/public/dashboard/<PERFORMANCE_UUID>'
     },
     {
       id: 'burnout',
       title: 'Burnout & Well-being',
-      url: 'https://metabase…/public/dashboard/<BURNOUT_UUID>'
+      url: 'https://metabase-production-1670.up.railway.app/public/dashboard/<BURNOUT_UUID>'
     },
     {
       id: 'activity',
       title: 'Activity & Alerts',
-      url: 'https://metabase…/public/dashboard/<ACTIVITY_UUID>'
+      url: 'https://metabase-production-1670.up.railway.app/public/dashboard/<ACTIVITY_UUID>'
     }
   ];
   const [selectedDash, setSelectedDash] = useState(dashboards[0]);
