@@ -36,20 +36,18 @@ export default function QuestionnaireList() {
   ];
   const [selectedDash, setSelectedDash] = useState(dashboards[0]);
 
-   const usersById = React.useMemo(() => {
-    return users.reduce((acc, u) => {
-      acc[u.id] = u.role.toLowerCase();
-      return acc;
-    }, {});
+  const employeeIds = React.useMemo(() => {
+    return users
+      .filter(u => (u.role || '').toLowerCase() === 'employee')
+      .map(u => u.id);
   }, [users]);
 
   const employeeResults = React.useMemo(() => {
-    if (!users.length) return results;
-    return results.filter(emp => (usersById[emp.user_id] || '') === 'employee');
-  }, [results, usersById, users.length]);
+    return results.filter(r => employeeIds.includes(r.user_id));
+  }, [results, employeeIds]);
 
   const activeUsers = React.useMemo(() => {
-    return employeeResults.filter(emp => emp.results.length > 0);
+    return employeeResults.filter(r => Array.isArray(r.results) && r.results.length > 0);
   }, [employeeResults]);
 
   useEffect(() => {
