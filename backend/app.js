@@ -17,12 +17,12 @@ app.use(express.json());
 
 app.get('/', (req, res) => res.json({ status: 'ok' }));
 
+app.use('/api/users', usersRouter);
 app.use('/api', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/questionnaires', questionnaireRoutes);
 app.use('/api/questionnaires', resultsRoutes);
 app.use('/api/activities', activitiesRouter);
-app.use('/api/users', usersRouter);
 app.use('/api', metabaseRt);
 
 app.use((req, res) => {
