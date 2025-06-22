@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import API from '../api';
 
 export default function QuestionnaireList() {
   const [questionnaires, setQuestionnaires] = useState([]);
   const [results, setResults] = useState([]);
-  const [users, setUsers] = useState([]); 
+  const [users, setUsers] = useState([]);
+  const [, setAlerts] = useState([]);
+  const [lastAlertTs, setLastAlertTs] = useState(null); 
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const navigate = useNavigate();
@@ -62,36 +66,58 @@ export default function QuestionnaireList() {
   }, []);
 
   useEffect(() => {
-  if (user && ['manager','admin'].includes(user.role)) {
+    if (!user) return;
+    const isMgr = ['manager','admin'].includes(user.role);
+    if (!isMgr) return;
     Promise.all([
       API.get('/questionnaires/results'),
       API.get('/users'),
+      API.get('/alerts'),
     ])
-    .then(([resResults, resUsers]) => {
-      console.log('>>> RESULTS FROM API:', resResults.data);
-      console.log('>>> USERS FROM API:', resUsers.data);
-      setResults(resResults.data);
-      setUsers(resUsers.data);
+    .then(([resR, resU, resA]) => {
+      setResults(resR.data);
+      setUsers(resU.data);
+      setAlerts(resA.data);
+      if (resA.data.length) {
+        setLastAlertTs(resA.data[0].created_at);
+      }
     })
     .catch(console.error);
-  }
-}, [user]);
+    const iv = setInterval(async () => {
+      try {
+        const res = await API.get('/alerts');
+        const all = res.data;
+        const newOnes = lastAlertTs
+          ? all.filter(a => new Date(a.created_at) > new Date(lastAlertTs))
+          : [];
+        newOnes.forEach(a => {
+          toast.info(`[${a.alert_level.toUpperCase()}] ${a.message}`, {
+            position: 'top-right',
+            autoClose: 8000,
+          });
+          if (window.Notification?.permission === 'granted') {
+            new Notification('TeamWell Alert', {
+              body: a.message,
+              tag: `alert-${a.id}`,
+            });
+          }
+        });
+        if (all.length) {
+          setLastAlertTs(all[0].created_at);
+        }
+      } catch (err) {
+        console.error('Eroare la fetch /alerts:', err);
+      }
+    }, 60_000);
 
-  /*useEffect(() => {
-    if (user && ['manager','admin'].includes(user.role)) {
-      API.get('/questionnaires/results')
-        .then(res => setResults(res.data))
-        .catch(err => console.error('Eroare la rezultate:', err));
-    }
-  }, [user]);
+    return () => clearInterval(iv);
+  }, [user, lastAlertTs]);
 
-  useEffect(() => {
-    if (user && ['manager','admin'].includes(user.role)) {
-      API.get('/users')
-        .then(res => setUsers(res.data))
-        .catch(err => console.error('Eroare la users:', err));
+   useEffect(() => {
+    if (window.Notification && Notification.permission === 'default') {
+      Notification.requestPermission();
     }
-  }, [user]);*/
+  }, []);
 
   const handleLogout  = () => { localStorage.clear(); navigate('/login'); };
   const handleProfile = () => navigate('/profile');
@@ -106,6 +132,7 @@ export default function QuestionnaireList() {
 
   return (
     <div style={wrapperStyle}>
+      <ToastContainer />
       <div style={logoStyle}>
         <img src="/logo.svg" alt="TeamWell" style={{ width: '200px' }} />
       </div>
