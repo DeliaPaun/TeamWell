@@ -93,7 +93,7 @@ export default function QuestionnaireList() {
         newOnes.forEach(a => {
           toast.info(`[${a.alert_level.toUpperCase()}] ${a.message}`, {
             position: 'top-right',
-            autoClose: 10000,
+            autoClose: 60000,
           });
           if (window.Notification?.permission === 'granted') {
             new Notification('TeamWell Alert', {
