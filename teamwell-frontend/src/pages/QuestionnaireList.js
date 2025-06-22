@@ -38,13 +38,14 @@ export default function QuestionnaireList() {
 
    const usersById = React.useMemo(() => {
     return users.reduce((acc, u) => {
-      acc[u.id] = u.role;
+      acc[u.id] = u.role.toLowerCase();
       return acc;
     }, {});
   }, [users]);
 
   const employeeResults = React.useMemo(() => {
-    return results.filter(emp => usersById[emp.user_id] === 'employee');
+    if (!users.length) return results;
+    return results.filter(emp => (usersById[emp.user_id] || '') === 'employee');
   }, [results, usersById]);
 
   const activeUsers = React.useMemo(() => {
