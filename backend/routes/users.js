@@ -2,6 +2,19 @@ const express = require('express');
 const router  = express.Router();
 const pool    = require('../db');
 
+router.get('/', async (req, res, next) => {
+  try {
+    const result = await pool.query(`
+      SELECT id, first_name, last_name, role
+      FROM users
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Eroare la GET /users:', err);
+    next(err);
+  }
+});
+
 router.get('/:id/team', async (req, res) => {
   const userId = req.params.id;
   try {
