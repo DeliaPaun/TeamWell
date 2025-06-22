@@ -62,6 +62,22 @@ export default function QuestionnaireList() {
   }, []);
 
   useEffect(() => {
+  if (user && ['manager','admin'].includes(user.role)) {
+    Promise.all([
+      API.get('/questionnaires/results'),
+      API.get('/users'),
+    ])
+    .then(([resResults, resUsers]) => {
+      console.log('>>> RESULTS FROM API:', resResults.data);
+      console.log('>>> USERS FROM API:', resUsers.data);
+      setResults(resResults.data);
+      setUsers(resUsers.data);
+    })
+    .catch(console.error);
+  }
+}, [user]);
+
+  /*useEffect(() => {
     if (user && ['manager','admin'].includes(user.role)) {
       API.get('/questionnaires/results')
         .then(res => setResults(res.data))
@@ -75,7 +91,7 @@ export default function QuestionnaireList() {
         .then(res => setUsers(res.data))
         .catch(err => console.error('Eroare la users:', err));
     }
-  }, [user]);
+  }, [user]);*/
 
   const handleLogout  = () => { localStorage.clear(); navigate('/login'); };
   const handleProfile = () => navigate('/profile');
