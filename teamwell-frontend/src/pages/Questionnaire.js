@@ -28,7 +28,7 @@ export default function Questionnaire() {
     e.preventDefault();
     setError('');
 
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(sessionStorage.getItem('user'));
     const payload = {
       userId:          user.id,
       questionnaireId: Number(id),
