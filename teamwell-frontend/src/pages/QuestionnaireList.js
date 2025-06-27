@@ -247,7 +247,14 @@ export default function QuestionnaireList() {
                         {activeUsers.map(emp => (
                           <li key={emp.user_id} style={{ padding:'0.75rem', borderBottom:'1px solid #eee' }}>
                             {emp.name} – {emp.results.length} completări
-                          </li>
+                            <ul style={{ marginTop: '0.5rem', paddingLeft: '1rem' }}>
+                          {emp.results.map((r, i) => (
+                            <li key={i} style={{ color: '#555', fontSize: '0.9rem' }}>
+                              {r.questionnaire} ({r.date})
+                            </li>
+                          ))}
+                        </ul>
+                        </li>
                         ))}
                       </ul>
                     )
