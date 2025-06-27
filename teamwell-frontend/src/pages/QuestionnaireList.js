@@ -222,8 +222,8 @@ export default function QuestionnaireList() {
                           <ul style={{ paddingLeft:'1.25rem' }}>
                             {emp.results.map((r,i) => {
                               const levelLabel = r.risk_level
-                                ? `Risk: ${r.risk_level}`
-                                : `Performance: ${r.performance_level}`;
+                                ? `Burnout Risk: ${r.risk_level}`
+                                : `Performance Risk: ${r.performance_level}`;
                               return (
                                 <li key={i} style={{ color:'#555', marginBottom:'0.25rem' }}>
                                   <strong>{r.questionnaire}</strong> – Score: {r.score}, {levelLabel}, Date: {r.date}
