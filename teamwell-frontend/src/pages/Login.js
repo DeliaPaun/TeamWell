@@ -14,7 +14,7 @@ export default function Login() {
     try {
       const res = await API.post('/login', { email, password });
       const { token, user } = res.data;
-      sessionStorage.setItem('token', token);
+      localStorage.setItem('token', token);
       sessionStorage.setItem('user', JSON.stringify(user));
       sessionStorage.setItem('role', user.role);
       navigate('/questionnaires');
