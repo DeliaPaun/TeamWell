@@ -55,7 +55,7 @@ export default function QuestionnaireList() {
   }, [employeeResults]);
 
   useEffect(() => {
-    const raw = localStorage.getItem('user');
+    const raw = sessionStorage.getItem('user');
     if (raw) setUser(JSON.parse(raw));
   }, []);
 
