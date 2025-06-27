@@ -92,8 +92,8 @@ async function submitResponses(req, res, next) {
       if ((riskLevel === 'medium' || riskLevel === 'high') && teamId) {
         const alertLevel = riskLevel === 'high' ? 'critical' : 'warning';
         const message = riskLevel === 'high'
-          ? `Scor burnout critic: ${totalScore} (${pct.toFixed(1)}%)`
-          : `Scor burnout ridicat: ${totalScore} (${pct.toFixed(1)}%)`;
+          ? `Scor burnout critic: ${pct.toFixed(1)}%`
+          : `Scor burnout mediu: ${pct.toFixed(1)}%`;
 
         await client.query(
           `INSERT INTO alerts

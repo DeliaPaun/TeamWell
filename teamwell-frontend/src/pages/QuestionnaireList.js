@@ -119,7 +119,7 @@ export default function QuestionnaireList() {
     }
   }, []);
 
-  const handleLogout  = () => { localStorage.clear(); navigate('/login'); };
+  const handleLogout  = () => { sessionStorage.clear(); navigate('/login'); };
   const handleProfile = () => navigate('/profile');
   if (!user) return null;
 
