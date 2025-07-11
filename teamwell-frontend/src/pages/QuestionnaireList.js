@@ -127,9 +127,6 @@ export default function QuestionnaireList() {
   const fullName = `${first_name} ${last_name}`.trim();
   const isManagerOrAdmin = role === 'manager' || role === 'admin';
 
-  //const employeeResults = results.filter(emp => usersById[emp.user_id] === 'employee');
-  //const activeUsers = employeeResults.filter(emp => emp.results.length > 0);
-
   return (
     <div style={wrapperStyle}>
       <ToastContainer />
@@ -338,8 +335,8 @@ function tabStyle(active) {
   };
 }
 const tabLabels = {
-  dashboard:      'Dashboard',
-  questionnaires:'Chestionare',
+  dashboard:      'Tablou de bord',
+  questionnaires: 'Chestionare',
   reports:        'Rapoarte',
   users:          'Utilizatori'
 };
