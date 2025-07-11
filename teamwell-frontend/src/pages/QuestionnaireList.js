@@ -135,7 +135,7 @@ export default function QuestionnaireList() {
       </div>
       <div style={containerStyle}>
         <div style={topBarStyle}>
-          <h2 style={{ margin: 0, color: '#283593' }}>Welcome, {fullName}!</h2>
+          <h2 style={{ margin: 0, color: '#283593' }}>Bine ai venit, {fullName}!</h2>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <button onClick={handleProfile} style={tabButtonStyle('#fff','#283593','#283593')}>Profil</button>
             <button onClick={handleLogout} style={tabButtonStyle('#283593','#fff')}>Deloghează-te</button>
